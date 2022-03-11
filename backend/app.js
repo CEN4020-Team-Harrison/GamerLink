@@ -4,14 +4,12 @@
 */
 
 const path = require("path")
-const db = require("./db")
+const db = require("./database/db_init")
 const express = require("express")
 
 const app = express()
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(express.static(path.join(__dirname, "/../frontend/public")))
-
-db.initDB()
 
 module.exports = app

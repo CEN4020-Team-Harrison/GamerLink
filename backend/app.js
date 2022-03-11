@@ -4,7 +4,7 @@
 */
 
 const path = require("path")
-const db = require("./database/db_init")
+const db = require("./database/db")
 const express = require("express")
 
 const app = express()

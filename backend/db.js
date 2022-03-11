@@ -4,13 +4,14 @@
 */
 
 const mysql = require("mysql")
+const config = require("./config")
 
 function initDB() {
     const dbConnection = mysql.createConnection({
-        host: "localhost",
-        user: "root",
-        password: "password",
-        database: "gamerlink"
+        host: config.db_host,
+        user: config.db_user,
+        password: config.db_password,
+        database: config.db_name
     })
     
     dbConnection.connect(err => {

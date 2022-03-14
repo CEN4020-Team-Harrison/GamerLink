@@ -7,7 +7,12 @@ const db = require("./db")
 
 function getMessages(gid) {
     return new Promise((resolve, reject) => {
-        db.conn.query("", (err, messages) => {
+        db.conn.query(`
+            SELECT *
+            FROM Message M
+            WHERE M.gid = ?
+        `, [gid],
+        (err, messages) => {
             if(err){
                 reject(err);
             }else{

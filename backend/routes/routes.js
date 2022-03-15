@@ -5,6 +5,8 @@
 
 const path = require("path")
 const express = require("express")
+const gameController = require("../controllers/game-controller")
+const profileController = require("../controllers/profile-controller")
 
 const dashboardController = require("../controllers/dashboard-controller")
 const gameController = require("../controllers/game-controller")
@@ -12,7 +14,13 @@ const profileController = require("../controllers/profile-controller")
 
 const router = express.Router();
 
-router.use("/", (_, _) => {
+router.get("/game", gameController.getGameData)
+router.post("/rate-game", gameController.addGameRating)
+
+router.get("/user", profileController.getUserProfile)
+router.post("/add-user", profileController.addUser)
+
+router.get("/", (_, _) => {
    res.sendFile(path.join(__dirname + "/../../frontend/public/html/index.html"));
 })
 

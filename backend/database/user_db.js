@@ -21,3 +21,17 @@ function getUser(uid) {
         })
     })
 }
+
+function addUser(user) {
+    return new Promise((resolve, reject) => {
+        db.conn.query("INSERT Into User(username, description) VALUES ?",
+        [user.name, user.description],
+        (err, users) => {
+            if(err) {
+                reject(err)
+            } else {
+                resolve(users)
+            }
+        })
+    })
+}

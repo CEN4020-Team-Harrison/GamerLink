@@ -21,3 +21,17 @@ function getMessages(gid) {
         })
     })
 }
+
+function addMessage(message) {
+    return new Promise((resolve, reject) => {
+        db.conn.query("INSERT Into MESSAGE(message, gid, uid, timestamp) VALUES ?",
+        [message.text, message.gid, message.senderUid, message.timestamp],
+        (err, messages) => {
+            if(err) {
+                reject(err)
+            } else {
+                resolve(messages)
+            }
+        })
+    })
+}

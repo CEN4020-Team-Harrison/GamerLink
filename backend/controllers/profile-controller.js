@@ -4,15 +4,34 @@
 */
 
 const userDB = require("../database/user_db")
+const createError = require("http-errors")
+const http = require("http-status-codes")
 
-function getUserProfile(req, res) {
-   if(!req.query.uid) {
-      
+function getUserProfile(req, res, next) {
+   const uid = req.query.uid
+
+   if(!uid) {
+      throw createError(http.StatusCodes.BAD_REQUEST, "uid not found.")
    }
+
+   userDB.getUser(uid).then(user => {
+      res.setHeader('Content-Type', 'application/json')
+      res.json(user)
+   }).catch(next)
 }
 
-function addUser(req, res) {
+function addUser(req, res, next) {
+   const user = req.query.user
+   if(!user) {
+      throw createError(http.StatusCodes.BAD_REQUEST, "user not found.")
+   }
 
+   const message = req.query.message
+   if(!message) {
+      throw createError(http.StatusCodes.BAD_REQUEST, "message not found.")
+   }
+
+   userDB.addUser(user).then(_ => res.send(http.StatusCodes.OK)).catch(next)
 }
 
 module.exports = {

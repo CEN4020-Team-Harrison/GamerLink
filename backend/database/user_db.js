@@ -35,3 +35,8 @@ function addUser(user) {
         })
     })
 }
+
+module.exports = {
+    getUser,
+    addUser
+}

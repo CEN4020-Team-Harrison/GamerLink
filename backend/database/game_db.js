@@ -5,7 +5,25 @@
 
 const db = require("./db")
 
-function getGames(uid) {
+function getGame(gid) {
+    return new Promise((resolve, reject) => {
+        db.conn.query(`
+            SELECT *
+            FROM Game G
+            WHERE G.gid = ?
+        `,
+        [gid],
+        (err, games) => {
+            if(err) {
+                reject(err)
+            } else {
+                resolve(games)
+            }
+        })
+    })
+}
+
+function getRatedGames(uid) {
     return new Promise((resolve, reject) => {
         db.conn.query(`
             SELECT *
@@ -14,18 +32,18 @@ function getGames(uid) {
         `, [uid],
         (err, games) => {
             if(err){
-                reject(err);
+                reject(err)
             }else{
-                resolve(games);
+                resolve(games)
             }
         })
     })
 }
 
-function addGameRating(gameRating) {
+function addGameRating(gid, uid, score) {
     return new Promise((resolve, reject) => {
         db.conn.query("INSERT Into RatedGame(gid, uid, score) VALUES ?",
-        [gameRating.gid, gameRating.uid, gameRating.score],
+        [gid, uid, score],
         (err, ratedGames) => {
             if(err) {
                 reject(err)
@@ -34,4 +52,10 @@ function addGameRating(gameRating) {
             }
         })
     })
+}
+
+module.exports = {
+    getGame,
+    getRatedGames,
+    addGameRating
 }

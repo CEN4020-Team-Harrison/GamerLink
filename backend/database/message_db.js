@@ -22,10 +22,10 @@ function getMessages(gid) {
     })
 }
 
-function addMessage(message) {
+function addMessage(gid, uid, message, timestamp) {
     return new Promise((resolve, reject) => {
-        db.conn.query("INSERT Into MESSAGE(message, gid, uid, timestamp) VALUES ?",
-        [message.text, message.gid, message.senderUid, message.timestamp],
+        db.conn.query("INSERT Into MESSAGE(gid, uid, message, timestamp) VALUES ?",
+        [gid, uid, message, timestamp],
         (err, messages) => {
             if(err) {
                 reject(err)
@@ -34,4 +34,9 @@ function addMessage(message) {
             }
         })
     })
+}
+
+module.exports = {
+    getMessages,
+    addMessage
 }

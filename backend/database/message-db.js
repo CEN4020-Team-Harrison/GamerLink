@@ -1,6 +1,6 @@
 /*
    Software Engineering - Team Harrison
-   GamerLink - message_db.js
+   GamerLink - message-db.js
 */
 
 const db = require("./db")

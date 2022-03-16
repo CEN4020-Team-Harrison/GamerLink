@@ -3,14 +3,13 @@
    GamerLink - game-controller.js
 */
 
-const gameDB = require("../database/game_db")
-const messageDB = require("../database/message_db")
+const gameDB = require("../database/game-db")
+const messageDB = require("../database/message-db")
 const createError = require("http-errors")
 const http = require("http-status-codes")
 
-function getGameData(req, res, next) {
-   const gid = req.query.gid
-
+function getGame(req, res, next) {
+   const gid = req.params.gid
    if(!gid) {
       throw createError(http.StatusCodes.BAD_REQUEST, "gid not found.")
    }
@@ -22,8 +21,7 @@ function getGameData(req, res, next) {
 }
 
 function getRatedGames(req, res, next) {
-   const uid = req.query.gid
-
+   const uid = req.params.gid
    if(!uid) {
       throw createError(http.StatusCodes.BAD_REQUEST, "uid not found.")
    }
@@ -35,8 +33,7 @@ function getRatedGames(req, res, next) {
 }
 
 function getGameMessages(req, res, next) {
-   const gid = req.query.gid
-
+   const gid = req.params.gid
    if(!gid) {
       throw createError(http.StatusCodes.BAD_REQUEST, "gid not found.")
    }
@@ -48,17 +45,17 @@ function getGameMessages(req, res, next) {
 }
 
 function addGameRating(req, res, next) {
-   const gid = req.query.gid
+   const gid = req.params.gid
    if(!gid) {
       throw createError(http.StatusCodes.BAD_REQUEST, "gid not found.")
    }
 
-   const uid = req.query.uid
+   const uid = req.params.uid
    if(!uid) {
       throw createError(http.StatusCodes.BAD_REQUEST, "uid not found.")
    }
 
-   const score = req.query.score
+   const score = req.params.score
    if(!score) {
       throw createError(http.StatusCodes.BAD_REQUEST, "score not found.")
    }
@@ -67,26 +64,26 @@ function addGameRating(req, res, next) {
 }
 
 function addGameMessage(req, res, next) {
-   const gid = req.query.gid
+   const gid = req.params.gid
    if(!gid) {
       throw createError(http.StatusCodes.BAD_REQUEST, "gid not found.")
    }
 
-   const uid = req.query.uid
+   const uid = req.params.uid
    if(!uid) {
       throw createError(http.StatusCodes.BAD_REQUEST, "uid not found.")
    }
 
-   const message = req.query.message
+   const message = req.params.message
    if(!message) {
       throw createError(http.StatusCodes.BAD_REQUEST, "message not found.")
    }
 
-   messageDB.addMessage(gid, uid, message, Date.now())
+   messageDB.addMessage(gid, uid, message, Date.now()).then(_ => res.send(http.StatusCodes.OK)).catch(next)
 }
 
 module.exports = {
-   getGameData,
+   getGame,
    getRatedGames,
    getGameMessages,
    addGameRating,

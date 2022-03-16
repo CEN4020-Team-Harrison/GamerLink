@@ -3,13 +3,12 @@
    GamerLink - profile-controller.js
 */
 
-const userDB = require("../database/user_db")
+const userDB = require("../database/user-db")
 const createError = require("http-errors")
 const http = require("http-status-codes")
 
-function getUserProfile(req, res, next) {
-   const uid = req.query.uid
-
+function getUser(req, res, next) {
+   const uid = req.params.uid
    if(!uid) {
       throw createError(http.StatusCodes.BAD_REQUEST, "uid not found.")
    }
@@ -21,12 +20,12 @@ function getUserProfile(req, res, next) {
 }
 
 function addUser(req, res, next) {
-   const user = req.query.user
+   const user = req.params.user
    if(!user) {
       throw createError(http.StatusCodes.BAD_REQUEST, "user not found.")
    }
 
-   const message = req.query.message
+   const message = req.params.message
    if(!message) {
       throw createError(http.StatusCodes.BAD_REQUEST, "message not found.")
    }
@@ -35,6 +34,6 @@ function addUser(req, res, next) {
 }
 
 module.exports = {
-   getUserProfile,
+   getUser,
    addUser
 }

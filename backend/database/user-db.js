@@ -1,6 +1,6 @@
 /*
    Software Engineering - Team Harrison
-   GamerLink - user_db.js
+   GamerLink - user-db.js
 */
 
 const db = require("./db")

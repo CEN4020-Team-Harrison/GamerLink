@@ -3,11 +3,9 @@
    GamerLink - user-db.js
 */
 
-const db = require("./db")
-
-function getUser(uid) {
+function getUser(dbConn, uid) {
     return new Promise((resolve, reject) => {
-        db.conn.query(`
+        dbConn.query(`
             SELECT *
             FROM User U
             WHERE U.uid = ?
@@ -22,10 +20,10 @@ function getUser(uid) {
     })
 }
 
-function addUser(user) {
+function addUser(dbConn, username, description) {
     return new Promise((resolve, reject) => {
-        db.conn.query("INSERT Into User(username, description) VALUES ?",
-        [user.name, user.description],
+        dbConn.query("INSERT Into User(username, description) VALUES ?",
+        [username, description],
         (err, users) => {
             if(err) {
                 reject(err)

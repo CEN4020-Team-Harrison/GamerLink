@@ -3,13 +3,14 @@
    GamerLink - user-db.test.js
 */
 
-import { describe, expect, it } from '@jest/globals'
 const userDB = require("./user-db")
 
 describe("getUser()", () => {
-
+    it("returns empty user if uid does not exist", () => {
+      
+    })
 })
 
 describe("addUser()", () => {
-    
+
 })

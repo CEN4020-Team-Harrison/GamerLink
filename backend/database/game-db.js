@@ -3,11 +3,9 @@
    GamerLink - game-db.js
 */
 
-const db = require("./db")
-
-function getGame(gid) {
+function getGame(dbConn, gid) {
     return new Promise((resolve, reject) => {
-        db.conn.query(`
+        dbConn.query(`
             SELECT *
             FROM Game G
             WHERE G.gid = ?
@@ -23,9 +21,9 @@ function getGame(gid) {
     })
 }
 
-function getRatedGames(uid) {
+function getRatedGames(dbConn, uid) {
     return new Promise((resolve, reject) => {
-        db.conn.query(`
+        dbConn.query(`
             SELECT *
             FROM User U, Game G, RatedGame RG
             WHERE U.uid = ? AND U.uid = RG.uid AND G.gid = RG.gid
@@ -40,9 +38,26 @@ function getRatedGames(uid) {
     })
 }
 
-function addGameRating(gid, uid, score) {
+function getGameMessages(dbConn, gid) {
     return new Promise((resolve, reject) => {
-        db.conn.query("INSERT Into RatedGame(gid, uid, score) VALUES ?",
+        dbConn.query(`
+            SELECT *
+            FROM Message M
+            WHERE M.gid = ?
+        `, [gid],
+        (err, messages) => {
+            if(err){
+                reject(err);
+            }else{
+                resolve(messages);
+            }
+        })
+    })
+}
+
+function addGameRating(dbConn, gid, uid, score) {
+    return new Promise((resolve, reject) => {
+        dbConn.query("INSERT Into RatedGame(gid, uid, score) VALUES ?",
         [gid, uid, score],
         (err, ratedGames) => {
             if(err) {
@@ -54,8 +69,24 @@ function addGameRating(gid, uid, score) {
     })
 }
 
+function addGameMessage(dbConn, gid, uid, message, timestamp) {
+    return new Promise((resolve, reject) => {
+        dbConn.query("INSERT Into MESSAGE(gid, uid, message, timestamp) VALUES ?",
+        [gid, uid, message, timestamp],
+        (err, messages) => {
+            if(err) {
+                reject(err)
+            } else {
+                resolve(messages)
+            }
+        })
+    })
+}
+
 module.exports = {
     getGame,
     getRatedGames,
-    addGameRating
+    getGameMessages,
+    addGameRating,
+    addGameMessage
 }

@@ -10,9 +10,9 @@ function getGame(dbConn, gameDB) {
    return (req, res, next) => {
       const gid = req.params.gid
       if(!gid) {
-         throw createError(http.StatusCodes.BAD_REQUEST, "gid not found.")
+         throw createError(http.StatusCodes.BAD_REQUEST, "invalid gid.")
       }
-
+      console.log("Hello Test")
       gameDB.getGame(dbConn, gid).then(game => {
          res.setHeader('Content-Type', 'application/json')
          res.json(game)
@@ -22,9 +22,9 @@ function getGame(dbConn, gameDB) {
 
 function getRatedGames(dbConn, gameDB) {
    return (req, res, next) => {
-      const uid = req.params.gid
+      const uid = req.params.uid
       if(!uid) {
-         throw createError(http.StatusCodes.BAD_REQUEST, "uid not found.")
+         throw createError(http.StatusCodes.BAD_REQUEST, "invalid uid.")
       }
    
       gameDB.getRatedGames(dbConn, uid).then(games => {
@@ -38,7 +38,7 @@ function getGameMessages(dbConn, gameDB) {
    return (req, res, next) => {
       const gid = req.params.gid
       if(!gid) {
-         throw createError(http.StatusCodes.BAD_REQUEST, "gid not found.")
+         throw createError(http.StatusCodes.BAD_REQUEST, "invalid gid.")
       }
    
       gameDB.getGameMessages(dbConn, gid).then(messages => {
@@ -52,17 +52,17 @@ function addGameRating(dbConn, gameDB) {
    return (req, res, next) => {
       const gid = req.params.gid
       if(!gid) {
-         throw createError(http.StatusCodes.BAD_REQUEST, "gid not found.")
+         throw createError(http.StatusCodes.BAD_REQUEST, "invalid gid.")
       }
    
       const uid = req.params.uid
       if(!uid) {
-         throw createError(http.StatusCodes.BAD_REQUEST, "uid not found.")
+         throw createError(http.StatusCodes.BAD_REQUEST, "invalid uid.")
       }
    
       const score = req.params.score
       if(!score) {
-         throw createError(http.StatusCodes.BAD_REQUEST, "score not found.")
+         throw createError(http.StatusCodes.BAD_REQUEST, "invalid score.")
       }
    
       gameDB.addGameRating(dbConn, gid, uid, score).then(_ => res.send(http.StatusCodes.OK)).catch(next)
@@ -73,20 +73,20 @@ function addGameMessage(dbConn, gameDB) {
    return (req, res, next) => {
       const gid = req.params.gid
       if(!gid) {
-         throw createError(http.StatusCodes.BAD_REQUEST, "gid not found.")
+         throw createError(http.StatusCodes.BAD_REQUEST, "invalid gid.")
       }
    
       const uid = req.params.uid
       if(!uid) {
-         throw createError(http.StatusCodes.BAD_REQUEST, "uid not found.")
+         throw createError(http.StatusCodes.BAD_REQUEST, "invalid uid.")
       }
    
       const message = req.params.message
       if(!message) {
-         throw createError(http.StatusCodes.BAD_REQUEST, "message not found.")
+         throw createError(http.StatusCodes.BAD_REQUEST, "invalid message.")
       }
    
-      gameDB.addGameMessage(gid, uid, message, Date.now()).then(_ => res.send(http.StatusCodes.OK)).catch(next)
+      gameDB.addGameMessage(dbConn, gid, uid, message, Date.now()).then(_ => res.send(http.StatusCodes.OK)).catch(next)
    }
 }
 

@@ -10,7 +10,7 @@ function getUser(dbConn, userDB) {
    return (req, res, next) => {
       const uid = req.params.uid
       if(!uid) {
-         throw createError(http.StatusCodes.BAD_REQUEST, "uid not found.")
+         throw createError(http.StatusCodes.BAD_REQUEST, "invalid uid.")
       }
    
       userDB.getUser(dbConn, uid).then(user => {
@@ -24,12 +24,12 @@ function addUser(dbConn, userDB) {
    return (req, res, next) => {
       const username = req.params.username
       if(!username) {
-         throw createError(http.StatusCodes.BAD_REQUEST, "username not found.")
+         throw createError(http.StatusCodes.BAD_REQUEST, "invalid username.")
       }
 
       const description = req.query.description
       if(!description) {
-         throw createError(http.StatusCodes.BAD_REQUEST, "description not found.")
+         throw createError(http.StatusCodes.BAD_REQUEST, "invalid description.")
       }
 
       userDB.addUser(dbConn, username, description).then(_ => res.send(http.StatusCodes.OK)).catch(next)

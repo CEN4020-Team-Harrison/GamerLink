@@ -5,6 +5,7 @@
 
 const userController = require("./user-controller")
 const createError = require("http-errors")
+const http = require("http-status-codes")
 
 const getUser = jest.fn()
 const addUser = jest.fn()
@@ -26,7 +27,7 @@ describe("getUser()", () => {
       const res = {}
       const next = jest.fn()
       
-      expect(userController.addUser(dbConn, fakeUserDB)(req, res, next)).toThrowError(createError(http.StatusCodes.BAD_REQUEST, "uid not found."))
+      expect(() => userController.getUser(dbConn, fakeUserDB)(req, res, next)).toThrowError(createError(http.StatusCodes.BAD_REQUEST, "uid not found."))
   })
 })
 

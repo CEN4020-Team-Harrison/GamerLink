@@ -5,6 +5,7 @@
 
 const gameController = require("./game-controller")
 const createError = require("http-errors")
+const http = require("http-status-codes")
 
 const getGame = jest.fn()
 const getRatedGames = jest.fn()
@@ -32,7 +33,7 @@ describe("getGame()", () => {
         const res = {}
         const next = jest.fn()
         
-        expect(gameController.getGame(dbConn, fakeGameDB)(req, res, next)).toThrowError(createError(http.StatusCodes.BAD_REQUEST, "gid not found."))
+        expect(() => gameController.getGame(dbConn, fakeGameDB)(req, res, next)).toThrowError(createError(http.StatusCodes.BAD_REQUEST, "gid not found."))
     })
 })
 

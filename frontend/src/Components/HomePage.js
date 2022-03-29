@@ -1,4 +1,13 @@
+import Carousel from 'react-elastic-carousel';
 import React from "react";
+
+const breakPoints = [
+  { width: 1, itemsToShow: 1 },
+  { width: 550, itemsToShow: 2 },
+  { width: 700, itemsToShow: 3 },
+  { width: 900, itemsToShow: 4 },
+  { width: 1200, itemsToShow: 4 },
+]
 
 const games = {
   game1: {
@@ -37,14 +46,14 @@ function HomePage() {
   return (
     <div className="bg-gray-800 h-screen">
       <div className="flex flex-col mt-20 mx-20">
-        <span className="text-white text-lg font-semibold pb-5">Popular Games</span>
-        <div className="text-white flex justify-between">
+        <span className="text-white text-lg font-semibold pb-5 ml-20">Popular Games</span>
+        <Carousel breakPoints={breakPoints} className="text-white flex justify-between">
           {Object.entries(games).map(([key, value]) => (
             <div className="" key={key}>
               <GameItem game={value} />
             </div>
           ))}
-        </div>
+        </Carousel>
       </div>
     </div>
   );
@@ -53,7 +62,7 @@ function HomePage() {
 const GameItem = ({ game }) => {
   return (
     <div>
-      <img src={game.poster} className="h-80" />
+      <img src={game.poster} className="h-70" />
       <div className="pt-3">
         <span className="">{game.title}</span>
         <p className="text-gray-500 text-sm">{game.genre}</p>

@@ -3,11 +3,11 @@ import React from "react";
 
 const NavBar = () => {
   return (
-    <nav className="bg-gray-200">
+    <nav className="bg-gray-800">
       <div className="px-20 mx-auto">
         <div className="flex justify-between">
-          <div className="flex py-4 px-3">
-            <a href="/" className="flex items-center mr-5 text-gray-700">
+          <div className="flex py-2 px-3">
+            <a href="/" className="flex items-center mr-5 text-gray-200">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-6 w-6 mr-1 text-red-700"
@@ -50,13 +50,13 @@ const NavBar = () => {
           <div className="flex items-center space-x-3">
             <Link
               to="/login"
-              className="py-5 px-3 font-medium text-gray-700 hover:text-gray-900"
+              className="py-5 px-3 font-sm text-gray-300 hover:text-gray-100"
             >
               Login
             </Link>
             <Link
               to="/signup"
-              className="py-2 px-3 font-medium bg-purple-600 hover:bg-purple-500 text-white rounded"
+              className="py-1 px-3 font-sm bg-purple-600 hover:bg-purple-500 text-white rounded"
             >
               Sign Up
             </Link>

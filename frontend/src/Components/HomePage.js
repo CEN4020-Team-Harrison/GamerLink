@@ -1,5 +1,6 @@
-import Carousel from 'react-elastic-carousel';
+import Carousel from "react-elastic-carousel";
 import React from "react";
+import { useHistory } from "react-router-dom";
 
 const breakPoints = [
   { width: 1, itemsToShow: 1 },
@@ -7,7 +8,7 @@ const breakPoints = [
   { width: 700, itemsToShow: 3 },
   { width: 900, itemsToShow: 4 },
   { width: 1200, itemsToShow: 4 },
-]
+];
 
 const games = {
   game1: {
@@ -43,13 +44,20 @@ const games = {
 };
 
 function HomePage() {
+  const history = useHistory();
+
   return (
-    <div className="bg-gray-800 h-screen">
+    <div className="bg-gray-200 h-screen">
       <div className="flex flex-col mt-20 mx-20">
-        <span className="text-white text-lg font-semibold pb-5 ml-20">Popular Games</span>
-        <Carousel breakPoints={breakPoints} className="text-white flex justify-between">
+        <span className="text-gray-800 text-lg font-semibold pb-5 ml-20">
+          Popular Games
+        </span>
+        <Carousel
+          breakPoints={breakPoints}
+          className="text-gray-800 flex justify-between"
+        >
           {Object.entries(games).map(([key, value]) => (
-            <div className="" key={key}>
+            <div className="" key={key} onClick={() => {history.push("/game:gameId")}}>
               <GameItem game={value} />
             </div>
           ))}

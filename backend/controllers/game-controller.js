@@ -6,13 +6,13 @@
 const createError = require("http-errors")
 const http = require("http-status-codes")
 
-function getGame(dbConn, gameDB) {
+function getGame(dbConn, gameDB, testFn) {
    return (req, res, next) => {
       const gid = req.params.gid
       if(!gid) {
          throw createError(http.StatusCodes.BAD_REQUEST, "invalid gid.")
       }
-      console.log("Hello Test")
+      testFn()
       gameDB.getGame(dbConn, gid).then(game => {
          res.setHeader('Content-Type', 'application/json')
          res.json(game)

@@ -49,9 +49,7 @@ describe("getGame()", () => {
         const res = {}
         const next = jest.fn()
 
-        gameController.getGame(dbConn, fakeGameDB)
-        
-        
+        gameController.getGame(dbConn, fakeGameDB, getGame)
     })
 })
 

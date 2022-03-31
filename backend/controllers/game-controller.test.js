@@ -91,7 +91,7 @@ describe("getGameMessages()", () => {
 
 describe("addGameRating()", () => {
     it("throw BAD_REQUEST error if gid is missing", () => {
-        const req = { params: { uid: "0", score: "0" } }
+        const req = { params: { uid: "0", rating: "0" } }
         const res = {}
         const next = jest.fn()
         
@@ -99,7 +99,7 @@ describe("addGameRating()", () => {
     })
 
     it("throw BAD_REQUEST error if gid is undefined", () => {
-        const req = { params: { gid: undefined, uid: "0", score: "0" } }
+        const req = { params: { gid: undefined, uid: "0", rating: "0" } }
         const res = {}
         const next = jest.fn()
         
@@ -107,7 +107,7 @@ describe("addGameRating()", () => {
     })
 
     it("throw BAD_REQUEST error if uid is missing", () => {
-        const req = { params: { gid: "0", score: "0" } }
+        const req = { params: { gid: "0", rating: "0" } }
         const res = {}
         const next = jest.fn()
         
@@ -115,27 +115,27 @@ describe("addGameRating()", () => {
     })
 
     it("throw BAD_REQUEST error if uid is undefined", () => {
-        const req = { params: { gid: "0", uid: undefined, score: "0" } }
+        const req = { params: { gid: "0", uid: undefined, rating: "0" } }
         const res = {}
         const next = jest.fn()
         
         expect(() => gameController.addGameRating(dbConn, fakeGameDB)(req, res, next)).toThrowError(createError(http.StatusCodes.BAD_REQUEST, "invalid uid."))
     })
 
-    it("throw BAD_REQUEST error if score is missing", () => {
+    it("throw BAD_REQUEST error if rating is missing", () => {
         const req = { params: { gid: "0", uid: "0" } }
         const res = {}
         const next = jest.fn()
         
-        expect(() => gameController.addGameRating(dbConn, fakeGameDB)(req, res, next)).toThrowError(createError(http.StatusCodes.BAD_REQUEST, "invalid score."))
+        expect(() => gameController.addGameRating(dbConn, fakeGameDB)(req, res, next)).toThrowError(createError(http.StatusCodes.BAD_REQUEST, "invalid rating."))
     })
 
-    it("throw BAD_REQUEST error if score is undefined", () => {
-        const req = { params: { gid: "0", uid: "0", score: undefined} }
+    it("throw BAD_REQUEST error if rating is undefined", () => {
+        const req = { params: { gid: "0", uid: "0", rating: undefined} }
         const res = {}
         const next = jest.fn()
         
-        expect(() => gameController.addGameRating(dbConn, fakeGameDB)(req, res, next)).toThrowError(createError(http.StatusCodes.BAD_REQUEST, "invalid score."))
+        expect(() => gameController.addGameRating(dbConn, fakeGameDB)(req, res, next)).toThrowError(createError(http.StatusCodes.BAD_REQUEST, "invalid rating."))
     })
 })
 

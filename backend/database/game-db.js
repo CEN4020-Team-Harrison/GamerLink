@@ -7,7 +7,7 @@ function getGame(dbConn, gid) {
     return new Promise((resolve, reject) => {
         dbConn.query(`
             SELECT *
-            FROM Game G
+            FROM game G
             WHERE G.gid = ?
         `,
         [gid],
@@ -25,7 +25,7 @@ function getRatedGames(dbConn, uid) {
     return new Promise((resolve, reject) => {
         dbConn.query(`
             SELECT *
-            FROM User U, Game G, RatedGame RG
+            FROM user U, game G, rated_game RG
             WHERE U.uid = ? AND U.uid = RG.uid AND G.gid = RG.gid
         `, [uid],
         (err, games) => {
@@ -42,7 +42,7 @@ function getGameMessages(dbConn, gid) {
     return new Promise((resolve, reject) => {
         dbConn.query(`
             SELECT *
-            FROM Message M
+            FROM message M
             WHERE M.gid = ?
         `, [gid],
         (err, messages) => {
@@ -55,10 +55,10 @@ function getGameMessages(dbConn, gid) {
     })
 }
 
-function addGameRating(dbConn, gid, uid, score) {
+function addGameRating(dbConn, gid, uid, rating) {
     return new Promise((resolve, reject) => {
-        dbConn.query("INSERT Into RatedGame(gid, uid, score) VALUES ?",
-        [gid, uid, score],
+        dbConn.query("INSERT INTO rated_game(gid, uid, rating) VALUES ?",
+        [gid, uid, rating],
         (err, ratedGames) => {
             if(err) {
                 reject(err)
@@ -69,10 +69,10 @@ function addGameRating(dbConn, gid, uid, score) {
     })
 }
 
-function addGameMessage(dbConn, gid, uid, message, timestamp) {
+function addGameMessage(dbConn, gid, uid, mid, message, timestamp) {
     return new Promise((resolve, reject) => {
-        dbConn.query("INSERT Into MESSAGE(gid, uid, message, timestamp) VALUES ?",
-        [gid, uid, message, timestamp],
+        dbConn.query("INSERT INTO message(gid, uid, mid, message, timestamp) VALUES ?",
+        [gid, uid, mid, message, timestamp],
         (err, messages) => {
             if(err) {
                 reject(err)

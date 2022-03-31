@@ -1,5 +1,7 @@
-import Carousel from 'react-elastic-carousel';
-import React from "react";
+import React, { useEffect } from "react";
+
+import Carousel from "react-elastic-carousel";
+import axios from "axios";
 
 const breakPoints = [
   { width: 1, itemsToShow: 1 },
@@ -7,7 +9,7 @@ const breakPoints = [
   { width: 700, itemsToShow: 3 },
   { width: 900, itemsToShow: 4 },
   { width: 1200, itemsToShow: 4 },
-]
+];
 
 const games = {
   game1: {
@@ -43,11 +45,27 @@ const games = {
 };
 
 function HomePage() {
+  // fake json placeholder api not the real IGDB api
+  useEffect(() => {
+    axios.get("https://jsonplaceholder.typicode.com/posts")
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch(err => {
+        console.log(err);
+      })
+  }, []);
+
   return (
     <div className="bg-gray-800 h-screen">
       <div className="flex flex-col mt-20 mx-20">
-        <span className="text-white text-lg font-semibold pb-5 ml-20">Popular Games</span>
-        <Carousel breakPoints={breakPoints} className="text-white flex justify-between">
+        <span className="text-white text-lg font-semibold pb-5 ml-20">
+          Popular Games
+        </span>
+        <Carousel
+          breakPoints={breakPoints}
+          className="text-white flex justify-between"
+        >
           {Object.entries(games).map(([key, value]) => (
             <div className="" key={key}>
               <GameItem game={value} />

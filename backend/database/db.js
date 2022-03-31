@@ -7,10 +7,11 @@ const mysql = require("mysql")
 const config = require("../config")
 
 const conn = mysql.createConnection({
-    host: config.db_host,
     user: config.db_user,
     password: config.db_password,
-    database: config.db_name
+    database: config.db_name,
+    host: config.db_host,
+    port: config.db_port
 })
 
 conn.connect(err => {

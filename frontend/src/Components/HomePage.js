@@ -1,6 +1,9 @@
 import Carousel from "react-elastic-carousel";
 import React from "react";
 import { useHistory } from "react-router-dom";
+import React, { useEffect } from "react";
+
+import axios from "axios";
 
 const breakPoints = [
   { width: 1, itemsToShow: 1 },
@@ -45,16 +48,26 @@ const games = {
 
 function HomePage() {
   const history = useHistory();
+  // fake json placeholder api not the real IGDB api
+  useEffect(() => {
+    axios.get("https://jsonplaceholder.typicode.com/posts")
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch(err => {
+        console.log(err);
+      })
+  }, []);
 
   return (
     <div className="bg-gray-200 h-screen">
       <div className="flex flex-col mt-20 mx-20">
-        <span className="text-gray-800 text-lg font-semibold pb-5 ml-20">
+        <span className="text-white text-lg font-semibold pb-5 ml-20">
           Popular Games
         </span>
         <Carousel
           breakPoints={breakPoints}
-          className="text-gray-800 flex justify-between"
+          className="text-white flex justify-between"
         >
           {Object.entries(games).map(([key, value]) => (
             <div className="" key={key} onClick={() => {history.push("/game:gameId")}}>

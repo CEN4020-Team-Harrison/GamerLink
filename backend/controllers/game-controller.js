@@ -6,13 +6,13 @@
 const createError = require("http-errors")
 const http = require("http-status-codes")
 
-function getGame(dbConn, gameDB) {
+function getGame(dbConn, gameDB, testFn) {
    return (req, res, next) => {
       const gid = req.params.gid
       if(!gid) {
          throw createError(http.StatusCodes.BAD_REQUEST, "invalid gid.")
       }
-      console.log("Hello Test")
+      
       gameDB.getGame(dbConn, gid).then(game => {
          res.setHeader('Content-Type', 'application/json')
          res.json(game)
@@ -60,12 +60,12 @@ function addGameRating(dbConn, gameDB) {
          throw createError(http.StatusCodes.BAD_REQUEST, "invalid uid.")
       }
    
-      const score = req.params.score
-      if(!score) {
-         throw createError(http.StatusCodes.BAD_REQUEST, "invalid score.")
+      const rating = req.params.rating
+      if(!rating) {
+         throw createError(http.StatusCodes.BAD_REQUEST, "invalid rating.")
       }
    
-      gameDB.addGameRating(dbConn, gid, uid, score).then(_ => res.send(http.StatusCodes.OK)).catch(next)
+      gameDB.addGameRating(dbConn, gid, uid, rating).then(_ => res.send(http.StatusCodes.OK)).catch(next)
    }
 }
 
@@ -80,13 +80,18 @@ function addGameMessage(dbConn, gameDB) {
       if(!uid) {
          throw createError(http.StatusCodes.BAD_REQUEST, "invalid uid.")
       }
+
+      const mid = req.params.mid
+      if(!uid) {
+         throw createError(http.StatusCodes.BAD_REQUEST, "invalid mid.")
+      }
    
       const message = req.params.message
       if(!message) {
          throw createError(http.StatusCodes.BAD_REQUEST, "invalid message.")
       }
    
-      gameDB.addGameMessage(dbConn, gid, uid, message, Date.now()).then(_ => res.send(http.StatusCodes.OK)).catch(next)
+      gameDB.addGameMessage(dbConn, gid, uid, mid, message, Date.now()).then(_ => res.send(http.StatusCodes.OK)).catch(next)
    }
 }
 

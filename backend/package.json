@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@google-cloud/storage": "^5.18.3",
     "express": "^4.17.3",
     "http-errors": "^2.0.0",
     "http-status-codes": "^2.2.0",

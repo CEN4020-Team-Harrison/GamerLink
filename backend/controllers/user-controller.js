@@ -8,15 +8,13 @@ const http = require("http-status-codes")
 
 function getUser(dbConn, userDB) {
    return (req, res, next) => {
-      res.set("Access-Control-Allow-Origin", "null")
-      res.set("Content-Type", "application/json")
-
       const uid = req.params.uid
       if(!uid) {
          throw createError(http.StatusCodes.BAD_REQUEST, "invalid uid.")
       }
    
       userDB.getUser(dbConn, uid).then(user => {
+         res.setHeader("Content-Type", "application/json")
          res.json(user)
       }).catch(next)
    }
@@ -24,8 +22,6 @@ function getUser(dbConn, userDB) {
 
 function addUser(dbConn, userDB) {
    return (req, res, next) => {
-      res.set("Access-Control-Allow-Origin", "null")
-
       const uid = req.params.uid
       if(!uid) {
          throw createError(http.StatusCodes.BAD_REQUEST, "invalid uid.")

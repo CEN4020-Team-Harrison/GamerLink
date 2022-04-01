@@ -8,7 +8,7 @@ function ProfilePage() {
   useEffect(() => {
     axios.get("http://localhost:3500/user/0")
       .then((res) => {
-        console.log(res);
+        console.log(res.data);
       })
       .catch(err => {
         console.log(err);

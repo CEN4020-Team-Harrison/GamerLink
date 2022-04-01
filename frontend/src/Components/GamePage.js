@@ -7,8 +7,8 @@ const GamePage = () => {
   // messages that can be used to populate the chat. 
   useEffect(() => {
     axios.get("http://localhost:3500/game-messages/0")
-      .then((res) => {
-        console.log(res);
+    .then((res) => {
+        console.log(res.data);
       })
       .catch(err => {
         console.log(err);

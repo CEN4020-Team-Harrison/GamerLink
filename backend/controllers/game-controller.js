@@ -8,8 +8,8 @@ const http = require("http-status-codes")
 
 function getGame(dbConn, gameDB) {
    return (req, res, next) => {
-      res.set('Access-Control-Allow-Origin', "null")
-      res.set('Content-Type', 'application/json')
+      res.set("Access-Control-Allow-Origin", "null")
+      res.set("Content-Type", "application/json")
 
       const gid = req.params.gid
       if(!gid) {
@@ -17,7 +17,6 @@ function getGame(dbConn, gameDB) {
       }
       
       gameDB.getGame(dbConn, gid).then(game => {
-         res.setHeader('Content-Type', 'application/json')
          res.json(game)
       }).catch(next)
    }
@@ -25,13 +24,15 @@ function getGame(dbConn, gameDB) {
 
 function getRatedGames(dbConn, gameDB) {
    return (req, res, next) => {
+      res.set("Access-Control-Allow-Origin", "null")
+      res.set("Content-Type", "application/json")
+
       const uid = req.params.uid
       if(!uid) {
          throw createError(http.StatusCodes.BAD_REQUEST, "invalid uid.")
       }
    
       gameDB.getRatedGames(dbConn, uid).then(games => {
-         res.setHeader('Content-Type', 'application/json')
          res.json(games)
       }).catch(next)
    }
@@ -39,13 +40,15 @@ function getRatedGames(dbConn, gameDB) {
 
 function getGameMessages(dbConn, gameDB) {
    return (req, res, next) => {
+      res.set("Access-Control-Allow-Origin", "null")
+      res.set("Content-Type", "application/json")
+
       const gid = req.params.gid
       if(!gid) {
          throw createError(http.StatusCodes.BAD_REQUEST, "invalid gid.")
       }
    
       gameDB.getGameMessages(dbConn, gid).then(messages => {
-         res.setHeader('Content-Type', 'application/json')
          res.json(messages)
       }).catch(next)
    }
@@ -53,6 +56,8 @@ function getGameMessages(dbConn, gameDB) {
 
 function addGameRating(dbConn, gameDB) {
    return (req, res, next) => {
+      res.set("Access-Control-Allow-Origin", "null")
+
       const gid = req.params.gid
       if(!gid) {
          throw createError(http.StatusCodes.BAD_REQUEST, "invalid gid.")
@@ -74,6 +79,8 @@ function addGameRating(dbConn, gameDB) {
 
 function addGameMessage(dbConn, gameDB) {
    return (req, res, next) => {
+      res.set("Access-Control-Allow-Origin", "null")
+
       const gid = req.params.gid
       if(!gid) {
          throw createError(http.StatusCodes.BAD_REQUEST, "invalid gid.")

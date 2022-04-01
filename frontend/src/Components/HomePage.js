@@ -1,7 +1,6 @@
-import React, { useEffect } from "react";
+import React from "react";
 
 import Carousel from "react-elastic-carousel";
-import axios from "axios";
 
 const breakPoints = [
   { width: 1, itemsToShow: 1 },
@@ -45,17 +44,6 @@ const games = {
 };
 
 function HomePage() {
-  // fake json placeholder api not the real IGDB api
-  useEffect(() => {
-    axios.get("http://localhost:3500/game/0")
-      .then((res) => {
-        console.log(res);
-      })
-      .catch(err => {
-        console.log(err);
-      })
-  }, []);
-
   return (
     <div className="bg-gray-800 h-screen">
       <div className="flex flex-col mt-20 mx-20">

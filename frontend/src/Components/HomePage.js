@@ -47,9 +47,9 @@ const games = {
 function HomePage() {
   // fake json placeholder api not the real IGDB api
   useEffect(() => {
-    axios.get("https://jsonplaceholder.typicode.com/posts")
+    axios.get("http://localhost:3500/game/0")
       .then((res) => {
-        console.log(res.data);
+        console.log(res);
       })
       .catch(err => {
         console.log(err);

@@ -6,8 +6,11 @@
 const createError = require("http-errors")
 const http = require("http-status-codes")
 
-function getGame(dbConn, gameDB, testFn) {
+function getGame(dbConn, gameDB) {
    return (req, res, next) => {
+      res.set('Access-Control-Allow-Origin', "null")
+      res.set('Content-Type', 'application/json')
+
       const gid = req.params.gid
       if(!gid) {
          throw createError(http.StatusCodes.BAD_REQUEST, "invalid gid.")

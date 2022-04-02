@@ -89,7 +89,7 @@ function addGameMessage(dbConn, gameDB) {
       // TODO: Find a way to generate unique ids for message
       const mid = 0
    
-      gameDB.addGameMessage(dbConn, gid, uid, mid, message, Date.now()).then(_ => res.send(http.StatusCodes.OK)).catch(next)
+      gameDB.addGameMessage(dbConn, 1, 2, 3, message, Date.now()).then(_ => res.send(http.StatusCodes.OK)).catch(next)
    }
 }
 

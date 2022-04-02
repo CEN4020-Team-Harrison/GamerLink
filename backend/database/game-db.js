@@ -57,7 +57,7 @@ function getGameMessages(dbConn, gid) {
 
 function addGameRating(dbConn, gid, uid, rating) {
     return new Promise((resolve, reject) => {
-        dbConn.query("INSERT INTO rated_game(gid, uid, rating) VALUES ?",
+        dbConn.query("INSERT INTO rated_game(gid, uid, rating) VALUES(?, ?, ?)",
         [gid, uid, rating],
         (err, ratedGames) => {
             if(err) {
@@ -71,7 +71,7 @@ function addGameRating(dbConn, gid, uid, rating) {
 
 function addGameMessage(dbConn, gid, uid, mid, message, timestamp) {
     return new Promise((resolve, reject) => {
-        dbConn.query("INSERT INTO message(gid, uid, mid, message, timestamp) VALUES ?",
+        dbConn.query("INSERT INTO message(gid, uid, mid, message, timestamp) VALUES (?, ?, ?, ?, ?)",
         [gid, uid, mid, message, timestamp],
         (err, messages) => {
             if(err) {

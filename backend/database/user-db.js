@@ -22,7 +22,7 @@ function getUser(dbConn, uid) {
 
 function addUser(dbConn, uid, username, discord, steam, facebook, description) {
     return new Promise((resolve, reject) => {
-        dbConn.query("INSERT INTO user(uid, username, discord, steam, facebook, description) VALUES ?",
+        dbConn.query("INSERT INTO user(uid, username, discord, steam, facebook, description) VALUES (?, ?, ?, ?, ?, ?)",
         [uid, username, discord, steam, facebook, description],
         (err, users) => {
             if(err) {

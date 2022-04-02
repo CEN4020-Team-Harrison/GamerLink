@@ -19,7 +19,7 @@ router.get("/game/:gid", gameController.getGame(db.conn, gameDB))
 router.get("/game-ratings/:uid", gameController.getRatedGames(db.conn, gameDB))
 router.get("/game-messages/:gid", gameController.getGameMessages(db.conn, gameDB))
 router.post("/rate-game/:gid/user/:uid/rating/:rating", gameController.addGameRating(db.conn, gameDB))
-router.post("/add-message/:message/game/:gid/user/:uid/message/:mid", gameController.addGameMessage(db.conn, gameDB))
+router.post("/add-message/:gid/user/:uid", gameController.addGameMessage(db.conn, gameDB))
 
 router.get("/user/:uid", userController.getUser(db.conn, userDB))
 router.post("/add-user/:uid", userController.addUser(db.conn, userDB))

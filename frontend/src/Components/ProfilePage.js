@@ -7,7 +7,7 @@ function ProfilePage() {
   // information related to the user with the given uid.
   useEffect(() => {
     axios.get("http://localhost:3500/user/0")
-      .then((res) => {
+      .then(res => {
         console.log(res.data);
       })
       .catch(err => {

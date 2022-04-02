@@ -65,7 +65,7 @@ function addGameRating(dbConn, gameDB) {
          throw createError(http.StatusCodes.BAD_REQUEST, "invalid rating.")
       }
    
-      gameDB.addGameRating(dbConn, gid, uid, rating).then(_ => res.send(http.StatusCodes.OK)).catch(next)
+      gameDB.addGameRating(dbConn, gid, uid, rating).then(_ => res.sendStatus(http.StatusCodes.OK)).catch(next)
    }
 }
 
@@ -89,7 +89,7 @@ function addGameMessage(dbConn, gameDB) {
       // TODO: Find a way to generate unique ids for message
       const mid = 0
    
-      gameDB.addGameMessage(dbConn, 1, 2, 3, message, Date.now()).then(_ => res.send(http.StatusCodes.OK)).catch(next)
+      gameDB.addGameMessage(dbConn, gid, uid, mid, message, Date.now()).then(_ => res.sendStatus(http.StatusCodes.OK)).catch(next)
    }
 }
 

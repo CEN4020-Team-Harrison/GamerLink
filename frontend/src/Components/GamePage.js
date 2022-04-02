@@ -42,7 +42,7 @@ const addMessageCallback = () => {
     {},
     { 
       headers: { "Content-Type": "application/json" },   
-      params: { message: "Test message"} 
+      params: { message: "Test message" } 
     })
     .then(res => {
       console.log("Successfully added message.")

@@ -34,6 +34,39 @@ function getRatedGames(dbConn, gameDB) {
    }
 }
 
+function getGameRating(dbConn, gameDB) {
+   return (req, res, next) => {
+      const gid = req.params.gid
+      if(!gid) {
+         throw createError(http.StatusCodes.BAD_REQUEST, "invalid gid.")
+      }
+
+      gameDB.getGameRating(dbConn, gid).then(rating => {
+         res.setHeader("Content-Type", "application/json")
+         res.json(rating)
+      }).catch(next)
+   }
+}
+
+function getGameRatingByUser(dbConn, gameDB) {
+   return (req, res, next) => {
+      const gid = req.params.gid
+      if(!gid) {
+         throw createError(http.StatusCodes.BAD_REQUEST, "invalid gid.")
+      }
+   
+      const uid = req.params.uid
+      if(!uid) {
+         throw createError(http.StatusCodes.BAD_REQUEST, "invalid uid.")
+      }
+
+      gameDB.getGameRatingByUser(dbConn, gid, uid).then(rating => {
+         res.setHeader("Content-Type", "application/json")
+         res.json(rating)
+      }).catch(next)
+   }
+}
+
 function getGameMessages(dbConn, gameDB) {
    return (req, res, next) => {
       const gid = req.params.gid
@@ -96,6 +129,8 @@ function addGameMessage(dbConn, gameDB) {
 module.exports = {
    getGame,
    getRatedGames,
+   getGameRating,
+   getGameRatingByUser,
    getGameMessages,
    addGameRating,
    addGameMessage

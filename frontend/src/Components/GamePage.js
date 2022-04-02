@@ -15,6 +15,35 @@ const getMessagesCallback = () => {
 }
 
 // Note to frontend: in the request below you should add the gid as
+// a parameter in place of the "0". The request returns the average
+// rating for the game given by all users. This should be displayed
+// in the 5-star display for the game page.
+const getGameRatingCallback = () => {
+  axios.get("http://localhost:3500/avg-game-rating/0")
+      .then(res => {
+          console.log(res.data);
+      })
+      .catch(err => {
+        console.log(err);
+      })
+}
+
+// Note to frontend: in the request below you should add the gid as
+// a parameter in place of the "0" and the uid in place of the "1". 
+// The request returns the rating for the game given by the user. This
+// rating value should be displayed before the user edits its rating.
+// An empty list will be returned if the user has not rated the game.
+const getGameRatingByUserCallback = () => {
+  axios.get("http://localhost:3500/game-rating/0/user/1")
+      .then(res => {
+          console.log(res.data);
+      })
+      .catch(err => {
+        console.log(err);
+      })
+}
+
+// Note to frontend: in the request below you should add the gid as
 // a parameter in place of the "0", the uid in place of the "1", and the 
 // rating in place of the "2". The request adds a rating to a game given
 // by a given user. This should be connected when the user clicks the rating

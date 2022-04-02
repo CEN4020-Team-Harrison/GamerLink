@@ -38,6 +38,40 @@ function getRatedGames(dbConn, uid) {
     })
 }
 
+function getGameRating(dbConn, gid) {
+    return new Promise((resolve, reject) => {
+        dbConn.query(`
+            SELECT AVG(rating) AS game_rating
+            FROM rated_game
+            WHERE gid = ?
+        `, [gid],
+        (err, rating) => {
+            if(err) {
+                reject(err)
+            } else {
+                resolve(rating)
+            }
+        })
+    })
+}
+
+function getGameRatingByUser(dbConn, gid, uid) {
+    return new Promise((resolve, reject) => {
+        dbConn.query(`
+            SELECT rating
+            FROM rated_game
+            WHERE gid = ? AND uid = ?
+        `, [gid, uid],
+        (err, rating) => {
+            if(err) {
+                reject(err)
+            } else {
+                resolve(rating)
+            }
+        })
+    })
+}
+
 function getGameMessages(dbConn, gid) {
     return new Promise((resolve, reject) => {
         dbConn.query(`
@@ -92,6 +126,8 @@ function addGameMessage(dbConn, gid, uid, mid, message, timestamp) {
 module.exports = {
     getGame,
     getRatedGames,
+    getGameRating,
+    getGameRatingByUser,
     getGameMessages,
     addGameRating,
     addGameMessage

@@ -53,8 +53,8 @@ const addUserCallback = () => {
 
 function ProfilePage() {
   useEffect(() => {
-    getRatedGamesCallback()
     getUserCallback()
+    getRatedGamesCallback()
   }, []);
 
   return (

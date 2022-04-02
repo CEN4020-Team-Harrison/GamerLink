@@ -107,12 +107,12 @@ function addGameRating(dbConn, gid, uid, rating) {
     })
 }
 
-function addGameMessage(dbConn, gid, uid, mid, message, timestamp) {
+function addGameMessage(dbConn, gid, uid, message, timestamp) {
     return new Promise((resolve, reject) => {
         dbConn.query(`
-            INSERT INTO message(gid, uid, mid, message, timestamp)
-            VALUES (?, ?, ?, ?, ?)
-        `, [gid, uid, mid, message, timestamp],
+            INSERT INTO message(gid, uid, message, timestamp)
+            VALUES (?, ?, ?, ?)
+        `, [gid, uid, message, timestamp],
         (err, messages) => {
             if(err) {
                 reject(err)

@@ -82,6 +82,7 @@ const addMessageCallback = () => {
 
 const GamePage = () => {
   useEffect(() => {
+    addMessageCallback()
     getMessagesCallback()
   }, []);
 

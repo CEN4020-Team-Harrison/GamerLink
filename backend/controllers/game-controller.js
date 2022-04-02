@@ -118,11 +118,8 @@ function addGameMessage(dbConn, gameDB) {
       if(!message) {
          throw createError(http.StatusCodes.BAD_REQUEST, "invalid message.")
       }
-
-      // TODO: Find a way to generate unique ids for message
-      const mid = 0
    
-      gameDB.addGameMessage(dbConn, gid, uid, mid, message, Date.now()).then(_ => res.sendStatus(http.StatusCodes.OK)).catch(next)
+      gameDB.addGameMessage(dbConn, gid, uid, message, Date.now()).then(_ => res.sendStatus(http.StatusCodes.OK)).catch(next)
    }
 }
 

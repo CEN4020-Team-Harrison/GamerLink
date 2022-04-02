@@ -25,8 +25,8 @@ function getRatedGames(dbConn, uid) {
     return new Promise((resolve, reject) => {
         dbConn.query(`
             SELECT *
-            FROM user U, game G, rated_game RG
-            WHERE U.uid = ? AND U.uid = RG.uid AND G.gid = RG.gid
+            FROM rated_game
+            WHERE uid = ?
         `, [uid],
         (err, games) => {
             if(err){

@@ -6,7 +6,6 @@
 const path = require("path")
 const express = require("express")
 
-const dashboardController = require("../controllers/dashboard-controller")
 const gameController = require("../controllers/game-controller")
 const userController = require("../controllers/user-controller")
 const db = require("../database/db")

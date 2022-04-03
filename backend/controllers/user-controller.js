@@ -14,7 +14,7 @@ function getUser(dbConn, userDB) {
       }
    
       userDB.getUser(dbConn, uid).then(user => {
-         res.setHeader('Content-Type', 'application/json')
+         res.setHeader("Content-Type", "application/json")
          res.json(user)
       }).catch(next)
    }
@@ -52,7 +52,7 @@ function addUser(dbConn, userDB) {
          throw createError(http.StatusCodes.BAD_REQUEST, "invalid description.")
       }
 
-      userDB.addUser(dbConn, uid, username, discord, steam, facebook, description).then(_ => res.send(http.StatusCodes.OK)).catch(next)
+      userDB.addUser(dbConn, uid, username, discord, steam, facebook, description).then(_ => res.sendStatus(http.StatusCodes.OK)).catch(next)
    }
 }
 

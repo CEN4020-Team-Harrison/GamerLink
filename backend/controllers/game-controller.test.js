@@ -141,7 +141,7 @@ describe("addGameRating()", () => {
 
 describe("addGameMessage()", () => {
     it("throw BAD_REQUEST error if gid is missing", () => {
-        const req = { params: { uid: "0", message: "0" } }
+        const req = { params: { uid: "0" }, query: { message: "0" } }
         const res = {}
         const next = jest.fn()
         
@@ -149,7 +149,7 @@ describe("addGameMessage()", () => {
     })
 
     it("throw BAD_REQUEST error if gid is undefined", () => {
-        const req = { params: { gid: undefined, uid: "0", message: "0" } }
+        const req = { params: { gid: undefined, uid: "0" }, query: { message: "0" } }
         const res = {}
         const next = jest.fn()
         
@@ -157,7 +157,7 @@ describe("addGameMessage()", () => {
     })
 
     it("throw BAD_REQUEST error if uid is missing", () => {
-        const req = { params: { gid: "0", message: "0" } }
+        const req = { params: { gid: "0" }, query: { message: "0" } }
         const res = {}
         const next = jest.fn()
         
@@ -165,7 +165,7 @@ describe("addGameMessage()", () => {
     })
 
     it("throw BAD_REQUEST error if uid is undefined", () => {
-        const req = { params: { gid: "0", uid: undefined, message: "0"} }
+        const req = { params: { gid: "0", uid: undefined }, query: { message: "0" } }
         const res = {}
         const next = jest.fn()
         
@@ -173,7 +173,7 @@ describe("addGameMessage()", () => {
     })
 
     it("throw BAD_REQUEST error if message is missing", () => {
-        const req = { params: { gid: "0", uid: "0" } }
+        const req = { params: { gid: "0", uid: "0" }, query: {} }
         const res = {}
         const next = jest.fn()
         
@@ -181,7 +181,7 @@ describe("addGameMessage()", () => {
     })
 
     it("throw BAD_REQUEST error if message is undefined", () => {
-        const req = { params: { gid: "0", uid: "0", message: undefined} }
+        const req = { params: { gid: "0", uid: "0"}, query: { message: undefined } }
         const res = {}
         const next = jest.fn()
         

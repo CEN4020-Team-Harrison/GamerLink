@@ -25,14 +25,48 @@ function getRatedGames(dbConn, uid) {
     return new Promise((resolve, reject) => {
         dbConn.query(`
             SELECT *
-            FROM user U, game G, rated_game RG
-            WHERE U.uid = ? AND U.uid = RG.uid AND G.gid = RG.gid
+            FROM rated_game
+            WHERE uid = ?
         `, [uid],
         (err, games) => {
             if(err){
                 reject(err)
             }else{
                 resolve(games)
+            }
+        })
+    })
+}
+
+function getGameRating(dbConn, gid) {
+    return new Promise((resolve, reject) => {
+        dbConn.query(`
+            SELECT AVG(rating) AS game_rating
+            FROM rated_game
+            WHERE gid = ?
+        `, [gid],
+        (err, rating) => {
+            if(err) {
+                reject(err)
+            } else {
+                resolve(rating)
+            }
+        })
+    })
+}
+
+function getGameRatingByUser(dbConn, gid, uid) {
+    return new Promise((resolve, reject) => {
+        dbConn.query(`
+            SELECT rating
+            FROM rated_game
+            WHERE gid = ? AND uid = ?
+        `, [gid, uid],
+        (err, rating) => {
+            if(err) {
+                reject(err)
+            } else {
+                resolve(rating)
             }
         })
     })
@@ -57,8 +91,12 @@ function getGameMessages(dbConn, gid) {
 
 function addGameRating(dbConn, gid, uid, rating) {
     return new Promise((resolve, reject) => {
-        dbConn.query("INSERT INTO rated_game(gid, uid, rating) VALUES ?",
-        [gid, uid, rating],
+        dbConn.query(`
+            INSERT INTO rated_game(gid, uid, rating)
+            VALUES(?, ?, ?)
+            ON DUPLICATE KEY UPDATE
+            rating = VALUES(rating)
+        `, [gid, uid, rating],
         (err, ratedGames) => {
             if(err) {
                 reject(err)
@@ -69,10 +107,12 @@ function addGameRating(dbConn, gid, uid, rating) {
     })
 }
 
-function addGameMessage(dbConn, gid, uid, mid, message, timestamp) {
+function addGameMessage(dbConn, gid, uid, message, timestamp) {
     return new Promise((resolve, reject) => {
-        dbConn.query("INSERT INTO message(gid, uid, mid, message, timestamp) VALUES ?",
-        [gid, uid, mid, message, timestamp],
+        dbConn.query(`
+            INSERT INTO message(gid, uid, message, timestamp)
+            VALUES (?, ?, ?, ?)
+        `, [gid, uid, message, timestamp],
         (err, messages) => {
             if(err) {
                 reject(err)
@@ -86,6 +126,8 @@ function addGameMessage(dbConn, gid, uid, mid, message, timestamp) {
 module.exports = {
     getGame,
     getRatedGames,
+    getGameRating,
+    getGameRatingByUser,
     getGameMessages,
     addGameRating,
     addGameMessage

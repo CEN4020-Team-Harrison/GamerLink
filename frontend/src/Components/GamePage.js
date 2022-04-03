@@ -1,10 +1,26 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
+import axiosConfig from "../config/axiosConfig";
 import bgimage from "../game-bg.jpeg";
+import { useParams } from "react-router-dom";
 
 const GamePage = () => {
+  const { gid } = useParams();
+  const [game, setGame] = useState({});
+  
   useEffect(() => {
-    // fetch game
+    // axiosConfig({
+    //   method: "post",
+    //   url: "/games",
+    //   data: `fields *; where id = ${gid};`,
+    // })
+    //   .then((response) => {
+    //     console.log(response.data);
+    //     setGame(response.data);
+    //   })
+    //   .catch((err) => {
+    //     console.error(err);
+    //   });
   }, []);
 
   const mockGame = {
@@ -30,7 +46,7 @@ const GamePage = () => {
         </div>
         <div className="ml-5">
           <div className="grid gap-1 mt-20 font-bold">
-            <span className="text-[65px] text-white">{mockGame.title}</span>
+            <span className="text-[60px] text-white">{mockGame.title}</span>
             <span className="text-xl text-gray-300">{mockGame.date}</span>
           </div>
           <div className="grid mt-10 ml-5 w-4/5">

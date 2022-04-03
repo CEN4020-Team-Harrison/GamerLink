@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "@google-cloud/storage": "^5.18.3",
+    "axios": "^0.26.1",
     "cors": "^2.8.5",
     "express": "^4.17.3",
     "http-errors": "^2.0.0",
@@ -14,6 +15,7 @@
     "jest": "^27.5.1"
   },
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "start": "nodemon server.js"
   }
 }

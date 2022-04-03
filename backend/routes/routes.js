@@ -8,6 +8,7 @@ const express = require("express")
 
 const gameController = require("../controllers/game-controller")
 const userController = require("../controllers/user-controller")
+const igdbController = require("../controllers/igdb-api-controller")
 const db = require("../database/db")
 const gameDB = require("../database/game-db")
 const userDB = require("../database/user-db")
@@ -24,6 +25,9 @@ router.post("/add-message/:gid/user/:uid", gameController.addGameMessage(db.conn
 
 router.get("/user/:uid", userController.getUser(db.conn, userDB))
 router.post("/add-user/:uid", userController.addUser(db.conn, userDB))
+
+router.get("/igdb/getPopularGames", igdbController.getPopularGames);
+router.get("/igdb/getGameInfo/:gid", igdbController.getGameInfo);
 
 router.get("/", (_0, _1) => {
    res.sendFile(path.join(__dirname + "/../../frontend/public/index.html"));

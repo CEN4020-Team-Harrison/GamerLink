@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import Carousel from "react-elastic-carousel";
-import axios from "axios";
+import axiosConfig from "../axiosConfig";
 import { useHistory } from "react-router-dom";
 
 const breakPoints = [
@@ -12,21 +12,18 @@ const breakPoints = [
   { width: 1200, itemsToShow: 4 },
 ];
 
-const games = {
-  game1: {
-    id: 1,
-    poster: "https://images.igdb.com/igdb/image/upload/t_cover_big/co3d03.png",
-    title: "Pokémon Legends: Arceus",
-    genre: "Adventure",
-  },
-};
-
 function HomePage() {
   const history = useHistory();
-  // const [games, setGames] = useState({});
+  const [games, setGames] = useState({});
 
   useEffect(() => {
-    axios.get()
+    axiosConfig.get("/igdb/getPopularGames")
+      .then(res => {
+        setGames(res.data);
+      })
+      .catch(err => {
+        console.log(err);
+      })
   }, []);
 
   return (
@@ -56,12 +53,13 @@ function HomePage() {
 }
 
 const GameItem = ({ game }) => {
+  const poster = `https://images.igdb.com/igdb/image/upload/t_cover_big/${game.cover}.png`
   return (
     <div>
-      <img src={game.poster} className="h-70" />
+      <img src={poster} className="h-70" />
       <div className="pt-3">
         <span>{game.name}</span>
-        <p className="text-gray-500 text-sm">{game.genres}</p>
+        <p className="text-gray-500 text-sm">{game.genres[0]}</p>
       </div>
     </div>
   );

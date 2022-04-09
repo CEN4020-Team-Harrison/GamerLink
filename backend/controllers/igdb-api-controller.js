@@ -25,7 +25,7 @@ const getPopularGames = async (req, res) => {
 				'Client-ID': 'wud75t3ykfbkz3me3av3xpo4k4gwqq',
 				'Authorization': 'Bearer ' + accessToken,
 		},
-		data: 'fields name, cover, genres; where genres != null & cover != null & rating > 75; limit 20;'
+		data: 'fields name, cover, genres; where genres != null & cover != null & rating > 75; limit 10;'
 	})
 	.then(response => {
 		games = response.data;

@@ -7,6 +7,7 @@ const path = require("path")
 const cors = require("cors")
 const router = require("./routes/routes")
 const express = require("express")
+const dotenv = require('dotenv')
 
 const app = express()
 app.use(cors())
@@ -20,5 +21,6 @@ app.use(function(_, res, next) {
    next();
  });
 app.use(router)
+dotenv.config()
 
 module.exports = app

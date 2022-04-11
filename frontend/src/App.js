@@ -18,7 +18,6 @@ function App() {
           <Route exact path="/profile" component={ProfilePage} />
           <Route exact path="/game/:gid" component={GamePage} />
           <Route exact path="/login" component={Login} />
-          <Route exact path="/signup" component={SignUp} />
         </Switch>
       </div>
     </Router>

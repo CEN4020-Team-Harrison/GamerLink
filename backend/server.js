@@ -15,6 +15,6 @@ const argv = yargs(hideBin(process.argv)).option('port', {
 
 const port = argv.port
 
-app.listen(port, () => {
+app.listen(process.env.PORT || port, () => {
     console.log("Server listening on port ", port)
 })

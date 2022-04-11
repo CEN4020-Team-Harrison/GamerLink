@@ -7,6 +7,7 @@ const path = require("path")
 const express = require("express")
 
 const gameController = require("../controllers/game-controller")
+const authController = require("../controllers/auth-controller")
 const userController = require("../controllers/user-controller")
 const igdbController = require("../controllers/igdb-api-controller")
 const db = require("../database/db")
@@ -22,6 +23,8 @@ router.get("/game-rating/:gid/user/:uid", gameController.getGameRatingByUser(db.
 router.get("/game-messages/:gid", gameController.getGameMessages(db.conn, gameDB))
 router.post("/rate-game/:gid/user/:uid/rating/:rating", gameController.addGameRating(db.conn, gameDB))
 router.post("/add-message/:gid/user/:uid", gameController.addGameMessage(db.conn, gameDB))
+
+router.post("/auth/google-login", authController.verifyLoginData())
 
 router.get("/user/:uid", userController.getUser(db.conn, userDB))
 router.post("/add-user/:uid", userController.addUser(db.conn, userDB))

@@ -17,13 +17,18 @@ function HomePage() {
   const [games, setGames] = useState({});
 
   useEffect(() => {
-    axiosConfig.get("/igdb/getPopularGames")
-      .then(res => {
-        setGames(res.data);
+    let isMounted = true;
+    axiosConfig
+      .get("/igdb/getPopularGames")
+      .then((res) => {
+        if (isMounted) setGames(res.data);
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
-      })
+      });
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   return (
@@ -53,7 +58,7 @@ function HomePage() {
 }
 
 const GameItem = ({ game }) => {
-  const poster = `https://images.igdb.com/igdb/image/upload/t_cover_big/${game.cover}.png`
+  const poster = `https://images.igdb.com/igdb/image/upload/t_cover_big/${game.cover}.png`;
   return (
     <div>
       <img src={poster} className="h-70" />

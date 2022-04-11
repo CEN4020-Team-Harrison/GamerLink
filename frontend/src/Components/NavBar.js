@@ -1,10 +1,16 @@
+import React, { useContext } from "react";
+
 import { Link } from "react-router-dom";
-import React from "react";
 import { useLocation } from "react-router-dom";
+import { userContext } from "./userContext";
 
 const NavBar = () => {
   const location = useLocation();
-
+  // const { user, setUser } = useContext(userContext);
+  // const handleLogout = () => {
+  //   setUser(null);
+  //   console.log("logged out")
+  // };
   return (
     <nav className="bg-gray-800">
       <div className="px-20 mx-auto">
@@ -51,7 +57,7 @@ const NavBar = () => {
             </div>
           </div>
           <div className="flex items-center space-x-3">
-            {location.pathname == '/login' ? null : (
+            {location.pathname == "/login" ? null : (
               <Link
                 to="/login"
                 className="py-1 px-3 font-sm bg-purple-600 hover:bg-purple-500 text-white font-semibold rounded"
@@ -59,11 +65,39 @@ const NavBar = () => {
                 Login
               </Link>
             )}
+            {/* <Button
+              user={user}
+              location={location}
+              handleLogout={() => {}}
+            /> */}
           </div>
         </div>
       </div>
     </nav>
   );
 };
+
+// const Button = ({ user, location, handleLogout }) => {
+//   if (user) {
+//     return (
+//       <Link
+//         to="/"
+//         className="py-1 px-3 font-sm bg-purple-600 hover:bg-purple-500 text-white font-semibold rounded"
+//         onClick={() => {}}
+//       >
+//         Logout
+//       </Link>
+//     );
+//   } else {
+//     return location.pathname == "/login" ? null : (
+//       <Link
+//         to="/login"
+//         className="py-1 px-3 font-sm bg-purple-600 hover:bg-purple-500 text-white font-semibold rounded"
+//       >
+//         Login
+//       </Link>
+//     );
+//   }
+// };
 
 export default NavBar;

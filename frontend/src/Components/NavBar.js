@@ -1,9 +1,20 @@
+import React, { useContext } from "react";
+
 import { Link } from "react-router-dom";
-import React from "react";
 import { useLocation } from "react-router-dom";
+import { userContext } from "./userContext";
 
 const NavBar = () => {
   const location = useLocation();
+  const { user, setUser } = useContext(userContext);
+  let usernameStr, username;
+  if(user) {
+    usernameStr = user.email.toString()
+    username = usernameStr.substring(0, usernameStr.indexOf('@'));
+  }
+  const handleLogout = () => {
+    setUser(null);
+  };
 
   return (
     <nav className="bg-gray-800">
@@ -30,6 +41,7 @@ const NavBar = () => {
                 />
                 <button
                   type="submit"
+                  onClick={() => alert("Coming soon!")}
                   className="rounded-full flex justify-center items-center"
                 >
                   <svg
@@ -51,19 +63,57 @@ const NavBar = () => {
             </div>
           </div>
           <div className="flex items-center space-x-3">
-            {location.pathname == '/login' ? null : (
-              <Link
-                to="/login"
-                className="py-1 px-3 font-sm bg-purple-600 hover:bg-purple-500 text-white font-semibold rounded"
-              >
-                Login
-              </Link>
-            )}
+            {user ? (
+              <a href={`/profile/:${username}`}>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6 text-gray-200"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+              </a>
+            ) : null}
+            <Button
+              user={user}
+              location={location}
+              handleLogout={handleLogout}
+            />
           </div>
         </div>
       </div>
     </nav>
   );
+};
+
+const Button = ({ user, location, handleLogout }) => {
+  if (user) {
+    return (
+      <Link
+        to="/"
+        className="py-1 px-3 font-sm bg-purple-600 hover:bg-purple-500 text-white font-semibold rounded"
+        onClick={handleLogout}
+      >
+        Log Out
+      </Link>
+    );
+  } else {
+    return location.pathname == "/login" ? null : (
+      <Link
+        to="/login"
+        className="py-1 px-3 font-sm bg-purple-600 hover:bg-purple-500 text-white font-semibold rounded"
+      >
+        Log In
+      </Link>
+    );
+  }
 };
 
 export default NavBar;

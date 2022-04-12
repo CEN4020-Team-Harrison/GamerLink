@@ -130,12 +130,17 @@ const GamePage = () => {
   const { gid } = useParams();
   const { user } = useContext(userContext);
   const [game, setGame] = useState({});
-  const [comment, setComment] = useState("");
+  const [comment, setComment] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
     // post reply to api
     console.log(comment);
+  }
+
+  const handleCancel = (e) => {
+    e.preventDefault();
+    setComment('');
   }
 
   useEffect(() => {
@@ -210,7 +215,7 @@ const GamePage = () => {
               ))}
             </div>
             <div className="max-w-lg rounded-lg shadow-md shadow-purple-600/50">
-              <form onSubmit={handleSubmit} className="w-full p-4">
+              <form onSubmit={handleSubmit} onReset={handleCancel} className="w-full p-4">
                 <div className="mb-2">
                   <label htmlFor="comment" className="text-base text-gray-600">
                     Add a comment
@@ -227,7 +232,7 @@ const GamePage = () => {
                   <button type="submit" className="px-3 py-2 mr-2 text-sm text-purple-100 bg-purple-600 rounded">
                     Comment
                   </button>
-                  <button className="px-3 py-2 text-sm text-purple-600 border border-purple-500 rounded">
+                  <button type="reset" className="px-3 py-2 text-sm text-purple-600 border border-purple-500 rounded">
                     Cancel
                   </button>
                 </div>

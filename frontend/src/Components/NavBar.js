@@ -14,6 +14,7 @@ const NavBar = () => {
   }
   const handleLogout = () => {
     setUser(null);
+    localStorage.removeItem('loginData');
   };
 
   return (

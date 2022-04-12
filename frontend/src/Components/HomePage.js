@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import Carousel from "react-elastic-carousel";
+import Loader from "./Loader";
 import axiosConfig from "../axiosConfig";
 import { useHistory } from "react-router-dom";
 
@@ -37,21 +38,25 @@ function HomePage() {
         <span className="text-gray-800 text-lg font-semibold pb-5 ml-20">
           Popular Games
         </span>
-        <Carousel
-          breakPoints={breakPoints}
-          className="text-gray-800 flex justify-between"
-        >
-          {Object.entries(games).map(([key, game]) => (
-            <div
-              key={key}
-              onClick={() => {
-                history.push(`/game/:${game.id}`);
-              }}
-            >
-              <GameItem game={game} />
-            </div>
-          ))}
-        </Carousel>
+        {Object.keys(games).length === 0 ? (
+          <Loader />
+        ) : (
+          <Carousel
+            breakPoints={breakPoints}
+            className="text-gray-800 flex justify-between"
+          >
+            {Object.entries(games).map(([key, game]) => (
+              <div
+                key={key}
+                onClick={() => {
+                  history.push(`/game/:${game.id}`);
+                }}
+              >
+                <GameItem game={game} />
+              </div>
+            ))}
+          </Carousel>
+        )}
       </div>
     </div>
   );

@@ -6,10 +6,16 @@ import HomePage from "./Components/HomePage";
 import Login from "./Components/Login";
 import NavBar from "./Components/NavBar";
 import ProfilePage from "./Components/ProfilePage";
+import { getStorageValue } from "./utils";
 import { userContext } from "./Components/userContext";
 
 function App() {
   const [user, setUser] = useState();
+
+  useEffect(() => {
+    setUser(getStorageValue("loginData"));
+    console.log(user);
+  }, []);
 
   return (
     <Router>
@@ -18,7 +24,7 @@ function App() {
           <NavBar />
           <Switch>
             <Route exact path="/" component={HomePage} />
-            <Route exact path="/profile" component={ProfilePage} />
+            <Route exact path="/profile/:email" component={ProfilePage} />
             <Route exact path="/game/:gid" component={GamePage} />
             <Route exact path="/login" component={Login} />
           </Switch>

@@ -14,7 +14,6 @@ function App() {
 
   useEffect(() => {
     setUser(getStorageValue("loginData"));
-    console.log(user);
   }, []);
 
   return (

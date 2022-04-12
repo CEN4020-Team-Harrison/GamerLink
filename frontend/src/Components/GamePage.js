@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import Loader from "./Loader";
 import axios from "axios";
@@ -6,6 +6,7 @@ import axiosConfig from "../axiosConfig";
 import bgimage from "../game-bg.jpeg";
 import { unixTimeConvert } from "../utils";
 import { useParams } from "react-router-dom";
+import { userContext } from "./userContext";
 
 // Note to frontend: in the request below you should add the gid as
 // a parameter in place of the "0". The request returns a list of
@@ -97,9 +98,50 @@ const addMessageCallback = () => {
     });
 };
 
+const replies = {
+  reply1: {
+    userName: "Tom",
+    message: "A new Twist to a old franchise",
+  },
+  reply2: {
+    userName: "Frank",
+    message: "Same game, horrible and laggy at times",
+  },
+  reply3: {
+    userName: "Fboy32",
+    message: "Fortnite is so musch better and cheaper",
+  },
+};
+
+const ReplyItem = ({ user, message, reply }) => {
+  return (
+    <div>
+      <a href={`/profile/:${reply.username}`}>
+        <span className="">{reply.message}</span>
+      </a>
+      <div className="pt-1">
+        <p className="text-gray-500 text-sm">{reply.message}</p>
+      </div>
+    </div>
+  );
+};
+
 const GamePage = () => {
   const { gid } = useParams();
+  const { user } = useContext(userContext);
   const [game, setGame] = useState({});
+  const [comment, setComment] = useState('');
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // post reply to api
+    console.log(comment);
+  }
+
+  const handleCancel = (e) => {
+    e.preventDefault();
+    setComment('');
+  }
 
   useEffect(() => {
     axiosConfig
@@ -115,7 +157,7 @@ const GamePage = () => {
   const poster = `https://images.igdb.com/igdb/image/upload/t_cover_big/${game.cover}.png`;
   const releaseDate = unixTimeConvert(game.first_release_date);
   return (
-    <div className="bg-gray-200 h-screen">
+    <div className="bg-gray-200 h-max">
       <img src={bgimage} className="w-full" />
       <div className="flex -mt-60 pb-40">
         <div className="flex flex-col ml-40 space-y-5 w-80">
@@ -157,6 +199,44 @@ const GamePage = () => {
                 <span>{game.version_title}</span>
               </div>
               <span>{game.summary}</span>
+            </div>
+          </div>
+          <div className="flex flex-col mt-12 ml-5">
+            <div className="border-b-4 w-24 border-purple-600 pb-2 mb-5">
+              <span className="font-semibold text-gray-700">Comments</span>
+            </div>
+            
+            {/* render a list of comment from api  */}
+            <div className="text-gray grid grid-cols-1 justify-items-start">
+              {Object.entries(replies).map(([key, value]) => (
+                <div className="mb-5" key={key}>
+                  <ReplyItem user={user} message={comment} reply={value} />
+                </div>
+              ))}
+            </div>
+            <div className="max-w-lg rounded-lg shadow-md shadow-purple-600/50">
+              <form onSubmit={handleSubmit} onReset={handleCancel} className="w-full p-4">
+                <div className="mb-2">
+                  <label htmlFor="comment" className="text-base text-gray-600">
+                    Add a comment
+                  </label>
+                  <textarea
+                    className="w-full h-20 p-2 mt-2 border rounded focus:outline-none focus:ring-gray-300 focus:ring-1"
+                    name="comment"
+                    value={comment}
+                    onChange={e => setComment(e.target.value)}
+                    placeholder="Type something..."
+                  ></textarea>
+                </div>
+                <div>
+                  <button type="submit" className="px-3 py-2 mr-2 text-sm text-purple-100 bg-purple-600 rounded">
+                    Comment
+                  </button>
+                  <button type="reset" className="px-3 py-2 text-sm text-purple-600 border border-purple-500 rounded">
+                    Cancel
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
         </div>

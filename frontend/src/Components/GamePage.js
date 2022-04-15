@@ -116,8 +116,8 @@ const replies = {
 const ReplyItem = ({ user, message, reply }) => {
   return (
     <div>
-      <a href={`/profile/:${reply.username}`}>
-        <span className="">{reply.message}</span>
+      <a href={`/profile/:${reply.userName}`}>
+        <span className="">{reply.userName}</span>
       </a>
       <div className="pt-1">
         <p className="text-gray-500 text-sm">{reply.message}</p>

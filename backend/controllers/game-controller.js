@@ -95,7 +95,12 @@ function addGameRating(dbConn, gameDB) {
 
 function addGameMessage(dbConn, gameDB) {
    return async (req, res, next) => {
+      console.log(req.session)
+      const username = req.session.username
       const email = req.session.email
+
+      console.log(username)
+      console.log(email)
 
       const gid = req.params.gid
       if(!gid) {
@@ -107,7 +112,7 @@ function addGameMessage(dbConn, gameDB) {
          throw createError(http.StatusCodes.BAD_REQUEST, "invalid message.")
       }
    
-      gameDB.addGameMessage(dbConn, gid, email, message, Date.now()).then(_ => res.sendStatus(http.StatusCodes.OK)).catch(next)
+      gameDB.addGameMessage(dbConn, gid, email, username, message, Date.now()).then(_ => res.sendStatus(http.StatusCodes.OK)).catch(next)
    }
 }
 

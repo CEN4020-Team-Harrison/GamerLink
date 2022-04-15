@@ -8,12 +8,11 @@ import { unixTimeConvert } from "../utils";
 import { useParams } from "react-router-dom";
 import { userContext } from "./userContext";
 
-// Note to frontend: in the request below you should add the gid as
-// a parameter in place of the "0". The request returns a list of
-// messages that can be used to populate the chat.
-const getMessagesCallback = () => {
+// The request returns a list of messages that can be
+// used to populate the chat.
+const getMessagesCallback = (gid) => {
   axios
-    .get("http://localhost:3500/game-messages/0")
+    .get(`http://localhost:3500/game-messages/${gid}`)
     .then(res => {
       console.log(res.data);
     })
@@ -153,6 +152,8 @@ const GamePage = () => {
       .catch((err) => {
         console.error(err);
       });
+
+      getMessagesCallback(gid)
   }, []);
 
   const poster = `https://images.igdb.com/igdb/image/upload/t_cover_big/${game.cover}.png`;

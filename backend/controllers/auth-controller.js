@@ -11,10 +11,11 @@ function verifyLoginData() {
     })
 
     const { name, email, picture } = ticket.getPayload();
-
+    
     req.session.username = name
     req.session.email = email
-
+    req.session.save()
+    console.log(req.session)
     res.status(201);
     res.json({name, email, picture});
   };

@@ -109,19 +109,37 @@ const ReplyItem = ({ user, message, reply }) => {
   );
 };
 
+const replies = {
+  reply1: {
+    userName: "Tom",
+    message: "A new Twist to a old franchise",
+  },
+  reply2: {
+    userName: "Frank",
+    message: "Same game, horrible and laggy at times",
+  },
+  reply3: {
+    userName: "Fboy32",
+    message: "Fortnite is so musch better and cheaper",
+  },
+};
+
 const GamePage = () => {
   const { gid } = useParams();
+  let newGid = gid.substring(1);
   const { user } = useContext(userContext);
   const [game, setGame] = useState({});
   const [comment, setComment] = useState('');
-  const [replies, setReplies] = useState(null);
+  const [replies, setReplies] = useState([]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     
-    addMessageCallback(gid, comment)
+    if(newGid) {
+      addMessageCallback(newGid, comment);
+    }
     // post reply to api
-    console.log(comment);
+    console.log(newGid);
   }
 
   const handleCancel = (e) => {
@@ -130,10 +148,10 @@ const GamePage = () => {
   }
 
   useEffect(() => {
-    setReplies(replgetMessagesCallback(gid))
-    
+    setReplies(getMessagesCallback(gid));
+
     axiosConfig
-      .get(`/igdb/getGameInfo/:${gid}`)
+      .get(`/igdb/getGameInfo/:${newGid}`)
       .then((res) => {
         setGame(res.data);
       })
@@ -196,7 +214,7 @@ const GamePage = () => {
             
             {/* render a list of comment from api  */}
             <div className="text-gray grid grid-cols-1 justify-items-start">
-              {Object.entries(replies).map(([key, value]) => (
+              {replies && replies.map((key, value) => (
                 <div className="mb-5" key={key}>
                   <ReplyItem user={user} message={comment} reply={value} />
                 </div>

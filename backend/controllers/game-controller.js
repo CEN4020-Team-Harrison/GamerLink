@@ -5,6 +5,7 @@
 
 const createError = require("http-errors")
 const http = require("http-status-codes")
+const sessionStorage = require('sessionstorage-for-nodejs')
 
 function getGame(dbConn, gameDB) {
    return (req, res, next) => {
@@ -95,12 +96,8 @@ function addGameRating(dbConn, gameDB) {
 
 function addGameMessage(dbConn, gameDB) {
    return async (req, res, next) => {
-      console.log(req.session)
-      const username = req.session.username
-      const email = req.session.email
-
-      console.log(username)
-      console.log(email)
+      const username = sessionStorage.getItem("username")
+      const email = sessionStorage.getItem("email")
 
       const gid = req.params.gid
       if(!gid) {

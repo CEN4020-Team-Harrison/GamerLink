@@ -1,5 +1,6 @@
 import Loader from "./Loader";
 import React from "react";
+import axios from "axios";
 import avatar from "../avatar-placeholder.png";
 import { useContext } from "react";
 import { userContext } from "./userContext";
@@ -8,7 +9,7 @@ import { userContext } from "./userContext";
 // a parameter in place of the "0". The request returns the profile
 // information related to the user with the given uid.
 const getUserCallback = () => {
-	axios.get("http://localhost:3500/user/0")
+	axios.get("http://localhost:3500/user")
 	.then(res => {
 	  console.log(res.data);
 	})

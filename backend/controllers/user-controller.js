@@ -5,15 +5,21 @@
 
 const createError = require("http-errors")
 const http = require("http-status-codes")
+const { OAuth2Client } = require("google-auth-library");
+
+const client = new OAuth2Client(process.env.REACT_APP_GOOGLE_CLIENT_ID);
 
 function getUser(dbConn, userDB) {
-   return (req, res, next) => {
-      const uid = req.params.uid
-      if(!uid) {
-         throw createError(http.StatusCodes.BAD_REQUEST, "invalid uid.")
-      }
+   return async (req, res, next) => {
+      const { token } = req.body;
+      const ticket = await client.verifyIdToken({
+         idToken: token,
+         audience: process.env.CLIENT_ID,
+      })
+
+      const loginData = ticket.getPayload()
    
-      userDB.getUser(dbConn, uid).then(user => {
+      userDB.getUser(dbConn, loginData.email).then(user => {
          res.setHeader("Content-Type", "application/json")
          res.json(user)
       }).catch(next)
@@ -21,16 +27,14 @@ function getUser(dbConn, userDB) {
 }
 
 function addUser(dbConn, userDB) {
-   return (req, res, next) => {
-      const uid = req.params.uid
-      if(!uid) {
-         throw createError(http.StatusCodes.BAD_REQUEST, "invalid uid.")
-      }
+   return async (req, res, next) => {
+      const { token } = req.body;
+      const ticket = await client.verifyIdToken({
+         idToken: token,
+         audience: process.env.CLIENT_ID,
+      })
 
-      const username = req.query.username
-      if(!username) {
-         throw createError(http.StatusCodes.BAD_REQUEST, "invalid username.")
-      }
+      const { username, email, _ } = ticket.getPayload();
 
       const discord = req.query.discord
       if(!discord) {
@@ -52,7 +56,7 @@ function addUser(dbConn, userDB) {
          throw createError(http.StatusCodes.BAD_REQUEST, "invalid description.")
       }
 
-      userDB.addUser(dbConn, uid, username, discord, steam, facebook, description).then(_ => res.sendStatus(http.StatusCodes.OK)).catch(next)
+      userDB.addUser(dbConn, email, username, discord, steam, facebook, description).then(_ => res.sendStatus(http.StatusCodes.OK)).catch(next)
    }
 }
 

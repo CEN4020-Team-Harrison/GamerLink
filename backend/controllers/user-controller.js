@@ -5,21 +5,12 @@
 
 const createError = require("http-errors")
 const http = require("http-status-codes")
-const { OAuth2Client } = require("google-auth-library");
-
-const client = new OAuth2Client(process.env.REACT_APP_GOOGLE_CLIENT_ID);
 
 function getUser(dbConn, userDB) {
    return async (req, res, next) => {
-      const { token } = req.body;
-      const ticket = await client.verifyIdToken({
-         idToken: token,
-         audience: process.env.CLIENT_ID,
-      })
+      const email = req.session.email
 
-      const loginData = ticket.getPayload()
-   
-      userDB.getUser(dbConn, loginData.email).then(user => {
+      userDB.getUser(dbConn, email).then(user => {
          res.setHeader("Content-Type", "application/json")
          res.json(user)
       }).catch(next)
@@ -28,13 +19,8 @@ function getUser(dbConn, userDB) {
 
 function addUser(dbConn, userDB) {
    return async (req, res, next) => {
-      const { token } = req.body;
-      const ticket = await client.verifyIdToken({
-         idToken: token,
-         audience: process.env.CLIENT_ID,
-      })
-
-      const { username, email, _ } = ticket.getPayload();
+      const email = req.session.email
+      const username = req.session.username
 
       const discord = req.query.discord
       if(!discord) {

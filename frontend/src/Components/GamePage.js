@@ -96,21 +96,6 @@ const addMessageCallback = (gid, message) => {
     });
 };
 
-const replies = {
-  reply1: {
-    userName: "Tom",
-    message: "A new Twist to a old franchise",
-  },
-  reply2: {
-    userName: "Frank",
-    message: "Same game, horrible and laggy at times",
-  },
-  reply3: {
-    userName: "Fboy32",
-    message: "Fortnite is so musch better and cheaper",
-  },
-};
-
 const ReplyItem = ({ user, message, reply }) => {
   return (
     <div>
@@ -129,6 +114,7 @@ const GamePage = () => {
   const { user } = useContext(userContext);
   const [game, setGame] = useState({});
   const [comment, setComment] = useState('');
+  const [replies, setReplies] = useState(null);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -144,6 +130,8 @@ const GamePage = () => {
   }
 
   useEffect(() => {
+    setReplies(replgetMessagesCallback(gid))
+    
     axiosConfig
       .get(`/igdb/getGameInfo/:${gid}`)
       .then((res) => {
@@ -152,8 +140,6 @@ const GamePage = () => {
       .catch((err) => {
         console.error(err);
       });
-
-      getMessagesCallback(gid)
   }, []);
 
   const poster = `https://images.igdb.com/igdb/image/upload/t_cover_big/${game.cover}.png`;

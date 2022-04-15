@@ -96,6 +96,19 @@ const addMessageCallback = (gid, message) => {
     });
 };
 
+const ReplyItem = ({ user, message, reply }) => {
+  return (
+    <div>
+      <a href={`/profile/:${reply.userName}`}>
+        <span className="">{reply.userName}</span>
+      </a>
+      <div className="pt-1">
+        <p className="text-gray-500 text-sm">{reply.message}</p>
+      </div>
+    </div>
+  );
+};
+
 const replies = {
   reply1: {
     userName: "Tom",
@@ -111,31 +124,22 @@ const replies = {
   },
 };
 
-const ReplyItem = ({ user, message, reply }) => {
-  return (
-    <div>
-      <a href={`/profile/:${reply.username}`}>
-        <span className="">{reply.message}</span>
-      </a>
-      <div className="pt-1">
-        <p className="text-gray-500 text-sm">{reply.message}</p>
-      </div>
-    </div>
-  );
-};
-
 const GamePage = () => {
   const { gid } = useParams();
+  let newGid = gid.substring(1);
   const { user } = useContext(userContext);
   const [game, setGame] = useState({});
   const [comment, setComment] = useState('');
+  const [replies, setReplies] = useState([]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     
-    addMessageCallback(gid, comment)
+    if(newGid) {
+      addMessageCallback(newGid, comment);
+    }
     // post reply to api
-    console.log(comment);
+    console.log(newGid);
   }
 
   const handleCancel = (e) => {
@@ -144,16 +148,16 @@ const GamePage = () => {
   }
 
   useEffect(() => {
+    setReplies(getMessagesCallback(gid));
+
     axiosConfig
-      .get(`/igdb/getGameInfo/:${gid}`)
+      .get(`/igdb/getGameInfo/:${newGid}`)
       .then((res) => {
         setGame(res.data);
       })
       .catch((err) => {
         console.error(err);
       });
-
-      getMessagesCallback(gid)
   }, []);
 
   const poster = `https://images.igdb.com/igdb/image/upload/t_cover_big/${game.cover}.png`;
@@ -210,7 +214,7 @@ const GamePage = () => {
             
             {/* render a list of comment from api  */}
             <div className="text-gray grid grid-cols-1 justify-items-start">
-              {Object.entries(replies).map(([key, value]) => (
+              {replies && replies.map((key, value) => (
                 <div className="mb-5" key={key}>
                   <ReplyItem user={user} message={comment} reply={value} />
                 </div>

@@ -1,4 +1,5 @@
-const { OAuth2Client } = require("google-auth-library");
+const { OAuth2Client } = require("google-auth-library")
+const sessionStorage = require('sessionstorage-for-nodejs')
 
 const client = new OAuth2Client(process.env.REACT_APP_GOOGLE_CLIENT_ID);
 
@@ -12,10 +13,9 @@ function verifyLoginData() {
 
     const { name, email, picture } = ticket.getPayload();
     
-    req.session.username = name
-    req.session.email = email
-    req.session.save()
-    console.log(req.session)
+    sessionStorage.setItem("username", name)
+    sessionStorage.setItem("email", email)
+   
     res.status(201);
     res.json({name, email, picture});
   };

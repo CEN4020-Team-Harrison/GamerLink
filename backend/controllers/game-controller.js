@@ -5,9 +5,6 @@
 
 const createError = require("http-errors")
 const http = require("http-status-codes")
-const { OAuth2Client } = require("google-auth-library");
-
-const client = new OAuth2Client(process.env.REACT_APP_GOOGLE_CLIENT_ID);
 
 function getGame(dbConn, gameDB) {
    return (req, res, next) => {
@@ -25,15 +22,9 @@ function getGame(dbConn, gameDB) {
 
 function getRatedGames(dbConn, gameDB) {
    return async (req, res, next) => {
-      const { token } = req.body
-      const ticket = await client.verifyIdToken({
-         idToken: token,
-         audience: process.env.CLIENT_ID,
-      })
-
-      const loginData = ticket.getPayload()
+      const email = req.session.email
    
-      gameDB.getRatedGames(dbConn, loginData.email).then(games => {
+      gameDB.getRatedGames(dbConn, email).then(games => {
          res.setHeader("Content-Type", "application/json")
          res.json(games)
       }).catch(next)
@@ -56,20 +47,14 @@ function getGameRating(dbConn, gameDB) {
 
 function getGameRatingByUser(dbConn, gameDB) {
    return async (req, res, next) => {
-      const { token } = req.body
-      const ticket = await client.verifyIdToken({
-         idToken: token,
-         audience: process.env.CLIENT_ID,
-      })
-
-      const loginData = ticket.getPayload()
+      const email = req.session.email
 
       const gid = req.params.gid
       if(!gid) {
          throw createError(http.StatusCodes.BAD_REQUEST, "invalid gid.")
       }
 
-      gameDB.getGameRatingByUser(dbConn, gid, loginData.email).then(rating => {
+      gameDB.getGameRatingByUser(dbConn, gid, email).then(rating => {
          res.setHeader("Content-Type", "application/json")
          res.json(rating)
       }).catch(next)
@@ -92,13 +77,7 @@ function getGameMessages(dbConn, gameDB) {
 
 function addGameRating(dbConn, gameDB) {
    return async (req, res, next) => {
-      const { token } = req.body
-      const ticket = await client.verifyIdToken({
-         idToken: token,
-         audience: process.env.CLIENT_ID,
-      })
-
-      const loginData = ticket.getPayload()
+      const email = req.session.email
 
       const gid = req.params.gid
       if(!gid) {
@@ -110,19 +89,13 @@ function addGameRating(dbConn, gameDB) {
          throw createError(http.StatusCodes.BAD_REQUEST, "invalid rating.")
       }
    
-      gameDB.addGameRating(dbConn, gid, loginData.email, rating).then(_ => res.sendStatus(http.StatusCodes.OK)).catch(next)
+      gameDB.addGameRating(dbConn, gid, email, rating).then(_ => res.sendStatus(http.StatusCodes.OK)).catch(next)
    }
 }
 
 function addGameMessage(dbConn, gameDB) {
    return async (req, res, next) => {
-      const { token } = req.body
-      const ticket = await client.verifyIdToken({
-         idToken: token,
-         audience: process.env.CLIENT_ID,
-      })
-
-      const loginData = ticket.getPayload()
+      const email = req.session.email
 
       const gid = req.params.gid
       if(!gid) {
@@ -134,7 +107,7 @@ function addGameMessage(dbConn, gameDB) {
          throw createError(http.StatusCodes.BAD_REQUEST, "invalid message.")
       }
    
-      gameDB.addGameMessage(dbConn, gid, loginData.email, message, Date.now()).then(_ => res.sendStatus(http.StatusCodes.OK)).catch(next)
+      gameDB.addGameMessage(dbConn, gid, email, message, Date.now()).then(_ => res.sendStatus(http.StatusCodes.OK)).catch(next)
    }
 }
 

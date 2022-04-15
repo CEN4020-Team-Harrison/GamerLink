@@ -79,14 +79,14 @@ const addGameRatingCallback = () => {
 // typed inside the params{message} JSON. The request adds a message
 // to the database. This should be connected when the user clicks a
 // send message button.
-const addMessageCallback = () => {
+const addMessageCallback = (gid, message) => {
   axios
     .post(
-      "http://localhost:3500/add-message/0",
+      `http://localhost:3500/add-message/${gid}`,
       {},
       {
         headers: { "Content-Type": "application/json" },
-        params: { message: "Test message" },
+        params: { message: message },
       }
     )
     .then(res => {
@@ -133,6 +133,8 @@ const GamePage = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    
+    addMessageCallback(gid, comment)
     // post reply to api
     console.log(comment);
   }

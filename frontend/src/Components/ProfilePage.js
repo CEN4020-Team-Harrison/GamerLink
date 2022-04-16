@@ -11,10 +11,7 @@ const getUserCallback = (setUserToRender) => {
   axios
     .get("http://localhost:3500/user")
     .then((res) => {
-      console.log("here00");
-      console.log(res.data);
-      setUserToRender(res.data);
-      console.log("currloginuser", res.data);
+      setUserToRender(res.data[0]);
     })
     .catch((err) => {
       console.log(err);
@@ -27,8 +24,7 @@ const getOtherUserCallback = (uid, setUserToRender) => {
   axios
     .get(`http://localhost:3500/other-user/${uid}`)
     .then((res) => {
-      setUserToRender(res.data);
-      console.log("currchosenuser", res.data);
+      setUserToRender(res.data[0]);
     })
     .catch((err) => {
       console.log(err);
@@ -40,7 +36,7 @@ const getRecentCommentsCallback = (uid, setComments) => {
   axios
     .get(`http://localhost:3500/user-comments/${uid}`)
     .then((res) => {
-      console.log(res.data);
+      setComments(res.data);
     })
     .catch((err) => {
       console.log(err);
@@ -53,12 +49,11 @@ const getRecentCommentsCallback = (uid, setComments) => {
 const addUserCallback = () => {
   axios
     .post(
-      "http://localhost:3500/add-user/0",
+      "http://localhost:3500/add-user",
       {},
       {
         headers: { "Content-Type": "application/json" },
         params: {
-          username: "Test Username",
           discord: "Test Discord Link",
           steam: "Test Steam Link",
           facebook: "Test Facebook Link",
@@ -102,10 +97,17 @@ const replies = {
 };
 
 const ReplyItem = ({ reply }) => {
+  var time = new Date(reply.timestamp * 1000);
   return (
-    <div>
-      <span className="">{reply.userName}</span>
-      <div className="pt-3">
+    <div className="m-5">
+      <div className="flex items-center">
+        <span className="font-medium">{reply.username}</span>
+        <span className="ml-2 mr-2 text-gray-500 text-sm">
+          {time.toLocaleString()}
+        </span>
+        <span>@{reply.gid}</span>
+      </div>
+      <div className="pt-1">
         <p className="text-gray-500 text-sm">{reply.message}</p>
       </div>
     </div>
@@ -115,7 +117,7 @@ const ReplyItem = ({ reply }) => {
 const LinksItem = ({ link }) => {
   return (
     <div className="transition transform hover:-translate-y-1 motion-reduce:transition-none motion-reduce:hover:transform-none">
-      <SocialIcon url={link.url} target="_blank" className="mr-2 -mb-24" />
+      <SocialIcon url={link.url} target="_blank" className="mr-2" />
     </div>
   );
 };
@@ -148,10 +150,11 @@ const SocialInput = ({ link }) => {
 export default function ProfilePage() {
   const { username } = useParams();
   let newUsername = username.substring(1);
+  let fullUsername = newUsername + "@gmail.com";
   const { user } = useContext(userContext);
   let [isOpen, setIsOpen] = useState(false);
-  const [userToRender, setUserToRender] = useState();
-  const [comments, setComments] = useState();
+  const [userToRender, setUserToRender] = useState({});
+  const [comments, setComments] = useState([]);
   let currUsername;
   if (user) {
     const currUsernameStr = user.email.toString();
@@ -160,37 +163,27 @@ export default function ProfilePage() {
 
   useEffect(() => {
     if (currUsername) {
-      if(newUsername == currUsername) {
-        getUserCallback(setUserToRender);
-        console.log("here0");
-      }else{
-        getOtherUserCallback(username, setUserToRender);
-        console.log("here1");
-      }
-      // newUsername == currUsername
-      //   ? getUserCallback(setUserToRender)
-      //   : getOtherUserCallback(username, setUserToRender);
+      newUsername == currUsername
+        ? getUserCallback(setUserToRender)
+        : getOtherUserCallback(fullUsername, setUserToRender);
     }
-    
-    getUserCallback(setUserToRender);
-
-    // getRecentCommentsCallback(setUserToRender.uid, setComments);
   }, [user]);
+
+  useEffect(() => {
+    getRecentCommentsCallback(userToRender.uid, setComments);
+  }, [userToRender]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
   };
 
-  return user ? (
+  return userToRender ? (
     <div className="flex justify-center mt-20">
       <div className="flex flex-col">
         <div className="flex">
           <div className="flex flex-col mr-20">
-            <span className="font-bold flex text-lg justify-center">
-              {user.name && user.name}
-            </span>
-            <div className="flex justify-start h-52 px-5">
-              <img src={avatar} className="h-52 mt-5" />
+            <div className="flex justify-start h-56 px-5">
+              <img src={avatar} className="h-56 w-52 mt-5" />
             </div>
             <button
               onClick={() => setIsOpen(true)}
@@ -286,32 +279,40 @@ export default function ProfilePage() {
               </form>
             </Dialog>
           </Transition>
-          <div className="grid grid-cols-1 divide-y divide-gray-300">
-            <div className="flex">
-              {Object.entries(socialLinks).map(([key, value]) => (
-                <div className="flex justify-start" key={key}>
-                  <LinksItem link={value} />
-                </div>
-              ))}
-            </div>
-            <div className="max-w-md">
-              <h2 className="mt-4 italic font-serif">
-                {"'"}Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                sed do eiusmod tempor incididunt ut labore et dolore magna
-                aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-                ullamco laboris nisi ut aliquip ex ea commodo consequat.{"'"}
-              </h2>
+          <div className="grid grid-cols-1 mt-5">
+            <span className="font-bold flex text-lg">
+              {userToRender.username}
+            </span>
+            <div className="grid grid-cols-1 divide-y divide-gray-300 -mt-8">
+              <div className="flex">
+                {Object.entries(socialLinks).map(([key, value]) => (
+                  <div className="flex justify-start" key={key}>
+                    <LinksItem link={value} />
+                  </div>
+                ))}
+              </div>
+              <div className="max-w-md">
+                <h2 className="mt-4 italic font-serif">
+                  {"'"}Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+                  sed do eiusmod tempor incididunt ut labore et dolore magna
+                  aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+                  ullamco laboris nisi ut aliquip ex ea commodo consequat.{"'"}
+                </h2>
+              </div>
             </div>
           </div>
         </div>
         <div className="flex flex-col mt-20">
-          <span className="text-black text-lg font-semibold">Comments</span>
-          <div className="text-gray flex flex-col ">
-            {Object.entries(replies).map(([key, value]) => (
-              <div className="flex justify-right" key={key}>
-                <ReplyItem reply={value} />
-              </div>
-            ))}
+          <div className="border-b-4 w-24 border-purple-600 pb-2 mb-3">
+            <span className="font-semibold text-gray-700">Comments</span>
+          </div>
+          <div className="grid grid-cols-1 divide-y text-gray">
+            {comments &&
+              comments.map((comment, i) => (
+                <div className="flex justify-right" key={i}>
+                  <ReplyItem reply={comment} />
+                </div>
+              ))}
           </div>
         </div>
       </div>

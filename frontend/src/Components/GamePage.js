@@ -40,11 +40,16 @@ const getGameMessagesCallback = (gid, setReplies) => {
 
 const ReplyItem = ({ reply }) => {
   var time = new Date(reply.timestamp * 1000);
+  let newUid;
+  if (reply.uid) {
+    const uidStr = reply.uid.toString();
+    newUid = uidStr.substring(0, uidStr.indexOf("@"));
+  }
   
   return (
     <div className="bg-white rounded-lg shadow-md border-solid border-2 w-8/12 p-2 mb-2 border-gray-300">
       <div className="flex items-center">
-        <a href={reply.uid ? `/profile/:${reply.uid}` : null}>
+        <a href={reply.uid ? `/profile/:${newUid}` : null}>
           {reply.username ? (
             <div className="flex items-center">
               <span className="font-semibold mr-1">{reply.username}</span>

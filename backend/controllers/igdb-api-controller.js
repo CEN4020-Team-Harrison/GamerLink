@@ -54,7 +54,7 @@ const getPopularGames = async (req, res) => {
 		});
 
 		let genres_title = [];
-
+		
 		await axios({
 			url: BASE_URL + "/genres",
 			method: 'POST',
@@ -109,7 +109,7 @@ const getGameInfo = async (req, res) => {
 	.catch(err => {
 		console.error(err);
 	});
-
+	
 	// Get genres title
 	await axios({
 		url: BASE_URL + "/genres",

@@ -7,65 +7,7 @@ import bgimage from "../game-bg.jpeg";
 import { unixTimeConvert } from "../utils";
 import { useParams } from "react-router-dom";
 
-// Note to frontend: in the request below you should add the gid as
-// a parameter in place of the "0". The request returns the average
-// rating for the game given by all users. This should be displayed
-// in the 5-star display for the game page.
-const getGameRatingCallback = () => {
-  axios
-    .get("http://localhost:3500/avg-game-rating/0")
-    .then((res) => {
-      console.log(res.data);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-};
-
-// Note to frontend: in the request below you should add the gid as
-// a parameter in place of the "0". Also add the message the user
-// typed inside the params{message} JSON. The request adds a message
-// to the database. This should be connected when the user clicks a
-// send message button.
-const addMessageCallback = (gid, message) => {
-  axios
-    .post(
-      `http://localhost:3500/add-message/${gid}`,
-      {},
-      {
-        headers: { "Content-Type": "application/json" },
-        params: { message: message },
-      }
-    )
-    .then((res) => {
-      console.log("Successfully added message.");
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-};
-
-// Note to frontend: in the request below you should add the gid as
-// a parameter in place of the "0". The request returns the rating
-// for the game given by the user. This rating value should be displayed
-// before the user edits its rating. An empty list will be returned if
-// the user has not rated the game.
-const getGameRatingByUserCallback = () => {
-  axios
-    .get("http://localhost:3500/game-rating/0")
-    .then((res) => {
-      console.log(res.data);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-};
-
-// Note to frontend: in the request below you should add the gid as
-// a parameter in place of the "0", and the rating in place of the "2".
-// The request adds a rating to a game given by a given user. This
-// should be connected when the user clicks the rating button (5-stars)
-const postGameCallback = (gid, comment) => {
+const postGameMessageCallback = (gid, comment) => {
   axios
     .post(
       `http://localhost:3500/add-message/${gid}`,
@@ -85,7 +27,7 @@ const postGameCallback = (gid, comment) => {
 
 // The request returns a list of messages that can be
 // used to populate the chat.
-const getGamesCallback = (gid, setReplies) => {
+const getGameMessagesCallback = (gid, setReplies) => {
   axios
     .get(`http://localhost:3500/game-messages/${gid}`)
     .then((res) => {
@@ -141,8 +83,8 @@ const GamePage = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    postGameCallback(newGid, comment);
-    getGamesCallback(newGid, setReplies);
+    postGameMessageCallback(newGid, comment);
+    getGameMessagesCallback(newGid, setReplies);
     setComment("");
     console.log(replies);
   };
@@ -153,7 +95,7 @@ const GamePage = () => {
   };
 
   useEffect(() => {
-    getGamesCallback(newGid, setReplies);
+    getGameMessagesCallback(newGid, setReplies);
     axiosConfig
       .get(`/igdb/getGameInfo/:${newGid}`)
       .then((res) => {

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import Loader from "./Loader";
 import axios from "axios";
@@ -6,16 +6,125 @@ import axiosConfig from "../axiosConfig";
 import bgimage from "../game-bg.jpeg";
 import { unixTimeConvert } from "../utils";
 import { useParams } from "react-router-dom";
-import { userContext } from "./userContext";
+
+// Note to frontend: in the request below you should add the gid as
+// a parameter in place of the "0". The request returns the average
+// rating for the game given by all users. This should be displayed
+// in the 5-star display for the game page.
+const getGameRatingCallback = () => {
+  axios
+    .get("http://localhost:3500/avg-game-rating/0")
+    .then((res) => {
+      console.log(res.data);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+// Note to frontend: in the request below you should add the gid as
+// a parameter in place of the "0". Also add the message the user
+// typed inside the params{message} JSON. The request adds a message
+// to the database. This should be connected when the user clicks a
+// send message button.
+const addMessageCallback = (gid, message) => {
+  axios
+    .post(
+      `http://localhost:3500/add-message/${gid}`,
+      {},
+      {
+        headers: { "Content-Type": "application/json" },
+        params: { message: message },
+      }
+    )
+    .then((res) => {
+      console.log("Successfully added message.");
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+// Note to frontend: in the request below you should add the gid as
+// a parameter in place of the "0". The request returns the rating
+// for the game given by the user. This rating value should be displayed
+// before the user edits its rating. An empty list will be returned if
+// the user has not rated the game.
+const getGameRatingByUserCallback = () => {
+  axios
+    .get("http://localhost:3500/game-rating/0")
+    .then((res) => {
+      console.log(res.data);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+// Note to frontend: in the request below you should add the gid as
+// a parameter in place of the "0", and the rating in place of the "2".
+// The request adds a rating to a game given by a given user. This
+// should be connected when the user clicks the rating button (5-stars)
+const postGameCallback = (gid, comment) => {
+  axios
+    .post(
+      `http://localhost:3500/add-message/${gid}`,
+      {},
+      {
+        headers: { "Content-Type": "application/json" },
+        params: { message: comment },
+      }
+    )
+    .then((res) => {
+      console.log("Successfully added message.");
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+// The request returns a list of messages that can be
+// used to populate the chat.
+const getGamesCallback = (gid, setReplies) => {
+  axios
+    .get(`http://localhost:3500/game-messages/${gid}`)
+    .then((res) => {
+      setReplies(res.data);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
 
 const ReplyItem = ({ reply }) => {
+  const time = unixTimeConvert(reply.timestamp);
+
   return (
-    <div>
-      <a href={`/profile/:${reply.uid}`}>
-        <span className="">{reply.uid}</span>
+    <div className="bg-white rounded-lg shadow-md border-solid border-2 w-8/12 p-2 mb-2 border-gray-300">
+      <a href={reply.username ? `/profile/:${reply.username}` : null}>
+        {reply.username ? (
+          <div className="flex items-center">
+            <span className="font-semibold mr-2">{reply.username}</span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5 text-green-700"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fillRule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                clipRule="evenodd"
+              />
+            </svg>
+          </div>
+        ) : (
+          <span className="font-semibold mr-3">Anonymous</span>
+        )}
+        <span className="text-gray-500 text-sm">{time}</span>
       </a>
       <div className="pt-1">
-        <p className="text-gray-500 text-sm">{reply.message}</p>
+        <p className="">{reply.message}</p>
       </div>
     </div>
   );
@@ -24,29 +133,16 @@ const ReplyItem = ({ reply }) => {
 const GamePage = () => {
   const { gid } = useParams();
   let newGid = gid.substring(1);
-  const { user } = useContext(userContext);
   const [game, setGame] = useState({});
   const [comment, setComment] = useState("");
   const [replies, setReplies] = useState([]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    axios
-    .post(
-      `http://localhost:3500/add-message/${gid}`,
-      {},
-      {
-        headers: { "Content-Type": "application/json" },
-         params: { message: comment },
-       }
-     )
-     .then((res) => {
-       console.log("Successfully added message.");
-     })
-     .catch((err) => {
-       console.log(err);
-     });
+    postGameCallback(newGid, comment);
+    getGamesCallback(newGid, setReplies);
+    setComment("");
+    console.log(replies);
   };
 
   const handleCancel = (e) => {
@@ -55,15 +151,7 @@ const GamePage = () => {
   };
 
   useEffect(() => {
-    axios
-      .get(`http://localhost:3500/game-messages/${gid}`)
-      .then((res) => {
-        setReplies(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-
+    getGamesCallback(newGid, setReplies);
     axiosConfig
       .get(`/igdb/getGameInfo/:${newGid}`)
       .then((res) => {
@@ -72,7 +160,7 @@ const GamePage = () => {
       .catch((err) => {
         console.error(err);
       });
-  }, []);
+  }, [replies]);
 
   const poster = `https://images.igdb.com/igdb/image/upload/t_cover_big/${game.cover}.png`;
   const releaseDate = unixTimeConvert(game.first_release_date);
@@ -125,12 +213,7 @@ const GamePage = () => {
             <div className="border-b-4 w-24 border-purple-600 pb-2 mb-5">
               <span className="font-semibold text-gray-700">Comments</span>
             </div>
-
-            {/* render a list of comment from api  */}
-            <div className="text-gray grid grid-cols-1 justify-items-start">
-              {replies && replies.map((reply, key) => <ReplyItem key={key} reply={reply} />)}
-            </div>
-            <div className="max-w-lg rounded-lg shadow-md shadow-purple-600/50">
+            <div className="w-8/12 mb-4 rounded-lg shadow-md shadow-purple-600/50">
               <form
                 onSubmit={handleSubmit}
                 onReset={handleCancel}
@@ -163,6 +246,12 @@ const GamePage = () => {
                   </button>
                 </div>
               </form>
+            </div>
+            <div className="flex flex-col-reverse text-gray">
+              {replies &&
+                replies.map((reply, key) => (
+                  <ReplyItem key={key} reply={reply} />
+                ))}
             </div>
           </div>
         </div>

@@ -94,7 +94,6 @@ const GamePage = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
     // // post reply to api
     axios
     .post(
@@ -110,7 +109,15 @@ const GamePage = () => {
     .catch((err) => {
       console.log(err);
     });
-    // console.log(newGid);
+
+    axios
+      .get(`http://localhost:3500/game-messages/${gid}`)
+      .then((res) => {
+        setReplies(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const handleCancel = (e) => {
@@ -136,7 +143,7 @@ const GamePage = () => {
       .catch((err) => {
         console.error(err);
       });
-  }, []);
+  }, [replies]);
 
   const poster = `https://images.igdb.com/igdb/image/upload/t_cover_big/${game.cover}.png`;
   const releaseDate = unixTimeConvert(game.first_release_date);

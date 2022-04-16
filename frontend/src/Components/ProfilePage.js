@@ -2,6 +2,7 @@ import { Dialog, Transition } from "@headlessui/react";
 import React, { Fragment, useContext, useState } from "react";
 
 import Loader from "./Loader";
+import { SocialIcon } from "react-social-icons";
 import avatar from "../avatar-placeholder.png";
 import axios from "axios";
 import { userContext } from "./userContext";
@@ -62,18 +63,22 @@ const addUserCallback = () => {
     });
 };
 
-const links = {
-  link1: {
-    linkName: "Twitter",
-    linkUrl: "Twitter.com",
+const socialLinks = {
+  twitch: {
+    title: "Twitch",
+    url: "https://www.twitch.com/",
   },
-  link2: {
-    linkName: "Discord",
-    linkUrl: "Discord.com",
+  discord: {
+    title: "Discord",
+    url: "https://www.discord.com/",
   },
-  link3: {
-    linkName: "Youtube",
-    linkUrl: "Youtube.com",
+  youtube: {
+    title: "Youtube",
+    url: "https://www.youtube.com/",
+  },
+  facebook: {
+    title: "Facebook",
+    url: "https://www.facebook.com/",
   },
 };
 
@@ -89,17 +94,6 @@ const replies = {
   },
 };
 
-const socialLinks = {
-  discord: {
-    title: "Discord",
-  },
-  facebook: {
-    title: "Facebook",
-  },
-  twitch: {
-    title: "Twitch",
-  },
-};
 
 const ReplyItem = ({ reply }) => {
   return (
@@ -115,10 +109,11 @@ const ReplyItem = ({ reply }) => {
 const LinksItem = ({ link }) => {
   return (
     <div>
-      <span className="">{link.linkName}</span>
-      <div className="pt-3">
-        <p className="text-gray-500 text-sm">{link.linkUrl}</p>
-      </div>
+      <SocialIcon
+          url={link.url}
+          target="_blank"
+          className=""
+        />
     </div>
   );
 };
@@ -263,11 +258,8 @@ export default function ProfilePage() {
               </form>
             </Dialog>
           </Transition>
-
-          <div className="text-gray flex flex-col"></div>
-          <div>
-            <span className="font-semibold text-lg">Links</span>
-            {Object.entries(links).map(([key, value]) => (
+          <div className="flex">
+            {Object.entries(socialLinks).map(([key, value]) => (
               <div className="flex justify-start" key={key}>
                 <LinksItem link={value} />
               </div>

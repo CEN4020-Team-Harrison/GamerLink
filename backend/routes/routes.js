@@ -23,6 +23,7 @@ router.post("/add-message/:gid", gameController.addGameMessage(db.conn, gameDB))
 router.post("/auth/google-login", authController.verifyLoginData())
 
 router.get("/user", userController.getUser(db.conn, userDB))
+router.get("/other-user/:uid", userController.getOtherUser(db.conn, gameDB))
 router.post("/add-user", userController.addUser(db.conn, userDB))
 
 router.get("/igdb/getPopularGames", igdbController.getPopularGames);

@@ -20,20 +20,16 @@ const getUserCallback = () => {
     });
 };
 
-// Note to frontend: in this request below you should add the uid as
-// a parameter in place of the "0". The request returns the list of games
-// that the user has rated. This should be added below the profile to show
-// a view of the games the user rated.
-const getRatedGamesCallback = () => {
+const getOtherUserCallback = (uid) => {
   axios
-    .get("http://localhost:3500/rated-games/0")
+    .get(`http://localhost:3500/other-user${uid}`)
     .then((res) => {
       console.log(res.data);
     })
     .catch((err) => {
       console.log(err);
     });
-};
+}
 
 // Note to frontend: in the request below you should add the uid as
 // a parameter in place of the "0". The request adds or updates information

@@ -40,7 +40,7 @@ const getGameMessagesCallback = (gid, setReplies) => {
 
 const ReplyItem = ({ reply }) => {
   var time = new Date(reply.timestamp);
-
+  console.log(reply.email)
   return (
     <div className="bg-white rounded-lg shadow-md border-solid border-2 w-8/12 p-2 mb-2 border-gray-300">
       <div className="flex items-center">

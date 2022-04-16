@@ -1,5 +1,5 @@
 import { Dialog, Transition } from "@headlessui/react";
-import React, { Fragment, useContext, useState } from "react";
+import React, { Fragment, useContext, useEffect, useState } from "react";
 
 import Loader from "./Loader";
 import { SocialIcon } from "react-social-icons";
@@ -7,9 +7,6 @@ import avatar from "../avatar-placeholder.png";
 import axios from "axios";
 import { userContext } from "./userContext";
 
-// Note to frontend: in the request below you should add the uid as
-// a parameter in place of the "0". The request returns the profile
-// information related to the user with the given uid.
 const getUserCallback = () => {
   axios
     .get("http://localhost:3500/user")
@@ -21,20 +18,30 @@ const getUserCallback = () => {
     });
 };
 
-// Note to frontend: in this request below you should add the uid as
-// a parameter in place of the "0". The request returns the list of games
-// that the user has rated. This should be added below the profile to show
-// a view of the games the user rated.
-const getRatedGamesCallback = () => {
+// Note to dan: this one is used to visit another user's profile
+// (no edit button should be shown).
+const getOtherUserCallback = (uid) => {
   axios
-    .get("http://localhost:3500/rated-games/0")
+    .get(`http://localhost:3500/other-user/${uid}`)
     .then((res) => {
       console.log(res.data);
     })
     .catch((err) => {
       console.log(err);
     });
-};
+}
+
+// Note to dan: this one returns the five most recent comments
+const getRecentCommentsCallback = (uid) => {
+  axios
+    .get(`http://localhost:3500/user-comments/${uid}`)
+    .then((res) => {
+      console.log(res.data);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+}
 
 // Note to frontend: in the request below you should add the uid as
 // a parameter in place of the "0". The request adds or updates information
@@ -146,6 +153,11 @@ const SocialInput = ({ link }) => {
 export default function ProfilePage() {
   const { user } = useContext(userContext);
   let [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    // Example call to recent callbacks. Need to dynamic provide email
+    getRecentCommentsCallback("bryantrianarueda@gmail.com")
+  }, [])
 
   const handleSubmit = (e) => {
     e.preventDefault();

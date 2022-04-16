@@ -17,6 +17,34 @@ function getUser(dbConn, userDB) {
    }
 }
 
+function getOtherUser(dbConn, userDB) {
+   return async (req, res, next) => {
+      const uid = req.params.uid
+      if(!uid) {
+         throw createError(http.StatusCodes.BAD_REQUEST, "invalid uid.")
+      }
+
+      userDB.getUser(dbConn, uid).then(user => {
+         res.setHeader("Content-Type", "application/json")
+         res.json(user)
+      }).catch(next)
+   }
+}
+
+function getRecentComments(dbConn, userDB) {
+   return async (req, res, next) => {
+      const uid = req.params.uid
+      if(!uid) {
+         throw createError(http.StatusCodes.BAD_REQUEST, "invalid uid.")
+      }
+
+      userDB.getRecentComments(dbConn, uid).then(comments => {
+         res.setHeader("Content-Type", "application/json")
+         res.json(comments)
+      }).catch(next)
+   }
+}
+
 function addUser(dbConn, userDB) {
    return async (req, res, next) => {
       const email = req.session.email
@@ -48,5 +76,7 @@ function addUser(dbConn, userDB) {
 
 module.exports = {
    getUser,
+   getOtherUser,
+   getRecentComments,
    addUser
 }

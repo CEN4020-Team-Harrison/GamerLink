@@ -39,18 +39,34 @@ function getRecentComments(dbConn, uid) {
     })
 }
 
-function addUser(dbConn, uid, username, discord, steam, facebook, description) {
+function initUser(dbConn, uid, username) {
     return new Promise((resolve, reject) => {
         dbConn.query(`
-            INSERT INTO user(uid, username, discord, steam, facebook, description)
-            VALUES (?, ?, ?, ?, ?, ?)
+            INSERT IGNORE INTO user(uid, username)
+            VALUES (?, ?)
+        `, [uid, username],
+        (err, user) => {
+            if(err) {
+                reject(err)
+            } else {
+                resolve(user)
+            }
+        })
+    })
+}
+
+function addUser(dbConn, uid, discord, steam, facebook, description) {
+    return new Promise((resolve, reject) => {
+        dbConn.query(`
+            INSERT INTO user(uid, discord, steam, facebook, description)
+            VALUES (?, ?, ?, ?, ?)
             ON DUPLICATE KEY UPDATE
             username = VALUES(username),
             discord = VALUES(discord),
             steam = VALUES(steam),
             facebook = VALUES(facebook),
             description = VALUES(description)
-        `, [uid, username, discord, steam, facebook, description],
+        `, [uid, discord, steam, facebook, description],
         (err, users) => {
             if(err) {
                 reject(err)
@@ -64,5 +80,6 @@ function addUser(dbConn, uid, username, discord, steam, facebook, description) {
 module.exports = {
     getUser,
     getRecentComments,
+    initUser,
     addUser
 }

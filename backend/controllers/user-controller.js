@@ -48,7 +48,6 @@ function getRecentComments(dbConn, userDB) {
 function addUser(dbConn, userDB) {
    return async (req, res, next) => {
       const email = req.session.email
-      const username = req.session.username
 
       const discord = req.query.discord
       if(!discord) {
@@ -70,7 +69,7 @@ function addUser(dbConn, userDB) {
          throw createError(http.StatusCodes.BAD_REQUEST, "invalid description.")
       }
 
-      userDB.addUser(dbConn, email, username, discord, steam, facebook, description).then(_ => res.sendStatus(http.StatusCodes.OK)).catch(next)
+      userDB.addUser(dbConn, email, discord, steam, facebook, description).then(_ => res.sendStatus(http.StatusCodes.OK)).catch(next)
    }
 }
 

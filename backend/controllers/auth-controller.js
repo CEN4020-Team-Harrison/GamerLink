@@ -3,8 +3,8 @@ const sessionStorage = require('sessionstorage-for-nodejs')
 
 const client = new OAuth2Client(process.env.REACT_APP_GOOGLE_CLIENT_ID);
 
-function verifyLoginData() {
-  return async (req, res) => {
+function verifyLoginData(dbConn, userDB) {
+  return async (req, res, next) => {
     const { token } = req.body;
     const ticket = await client.verifyIdToken({
         idToken: token,
@@ -15,8 +15,8 @@ function verifyLoginData() {
     
     sessionStorage.setItem("username", name)
     sessionStorage.setItem("email", email)
-   
-    res.status(201);
+
+    userDB.initUser(dbConn, email, name).then(_ => res.sendStatus(http.StatusCodes.OK)).catch(next)
     res.json({name, email, picture});
   };
 }

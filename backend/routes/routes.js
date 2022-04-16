@@ -20,7 +20,7 @@ router.get("/game/:gid", gameController.getGame(db.conn, gameDB))
 router.get("/game-messages/:gid", gameController.getGameMessages(db.conn, gameDB))
 router.post("/add-message/:gid", gameController.addGameMessage(db.conn, gameDB))
 
-router.post("/auth/google-login", authController.verifyLoginData())
+router.post("/auth/google-login", authController.verifyLoginData(db.conn, userDB))
 
 router.get("/user", userController.getUser(db.conn, userDB))
 router.get("/other-user/:uid", userController.getOtherUser(db.conn, userDB))

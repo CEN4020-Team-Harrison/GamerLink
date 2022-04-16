@@ -23,7 +23,7 @@ function App() {
           <NavBar />
           <Switch>
             <Route exact path="/" component={HomePage} />
-            <Route exact path="/profile/:email" component={ProfilePage} />
+            <Route exact path="/profile/:username" component={ProfilePage} />
             <Route exact path="/game/:gid" component={GamePage} />
             <Route exact path="/login" component={Login} />
           </Switch>

@@ -8,7 +8,7 @@ const http = require("http-status-codes")
 
 function getUser(dbConn, userDB) {
    return async (req, res, next) => {
-      const email = req.session.email
+      const email = sessionStorage.getItem("email")
 
       userDB.getUser(dbConn, email).then(user => {
          res.setHeader("Content-Type", "application/json")
@@ -47,7 +47,7 @@ function getRecentComments(dbConn, userDB) {
 
 function addUser(dbConn, userDB) {
    return async (req, res, next) => {
-      const email = req.session.email
+      const email = sessionStorage.getItem("email")
 
       const discord = req.query.discord
       if(!discord) {

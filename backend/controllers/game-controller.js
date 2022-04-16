@@ -49,8 +49,8 @@ function addGameMessage(dbConn, gameDB) {
       if(!message) {
          throw createError(http.StatusCodes.BAD_REQUEST, "invalid message.")
       }
-   
-      gameDB.addGameMessage(dbConn, gid, email, username, message, Date.now()).then(_ => res.sendStatus(http.StatusCodes.OK)).catch(next)
+
+      gameDB.addGameMessage(dbConn, gid, email, username, message, Date.now() / 1000).then(_ => res.sendStatus(http.StatusCodes.OK)).catch(next)
    }
 }
 

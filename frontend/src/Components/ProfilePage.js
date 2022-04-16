@@ -11,6 +11,7 @@ const getUserCallback = (setUserToRender) => {
   axios
     .get("http://localhost:3500/user")
     .then((res) => {
+      console.log("here00");
       console.log(res.data);
       setUserToRender(res.data);
       console.log("currloginuser", res.data);
@@ -159,9 +160,16 @@ export default function ProfilePage() {
 
   useEffect(() => {
     if (currUsername) {
-      newUsername == currUsername
-        ? getUserCallback(setUserToRender)
-        : getOtherUserCallback(username, setUserToRender);
+      if(newUsername == currUsername) {
+        getUserCallback(setUserToRender);
+        console.log("here0");
+      }else{
+        getOtherUserCallback(username, setUserToRender);
+        console.log("here1");
+      }
+      // newUsername == currUsername
+      //   ? getUserCallback(setUserToRender)
+      //   : getOtherUserCallback(username, setUserToRender);
     }
     
     getUserCallback(setUserToRender);

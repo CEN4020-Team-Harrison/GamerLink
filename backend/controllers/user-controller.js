@@ -5,6 +5,7 @@
 
 const createError = require("http-errors")
 const http = require("http-status-codes")
+const sessionStorage = require('sessionstorage-for-nodejs')
 
 function getUser(dbConn, userDB) {
    return async (req, res, next) => {

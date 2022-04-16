@@ -1,7 +1,6 @@
 import { Dialog, Transition } from "@headlessui/react";
 import React, { Fragment, useContext, useEffect, useState } from "react";
 
-import Loader from "./Loader";
 import { SocialIcon } from "react-social-icons";
 import avatar from "../avatar-placeholder.png";
 import axios from "axios";
@@ -36,7 +35,7 @@ const getOtherUserCallback = (uid, setUserToRender) => {
 };
 
 // Note to dan: this one returns the five most recent comments
-const getRecentCommentsCallback = (uid) => {
+const getRecentCommentsCallback = (uid, setComments) => {
   axios
     .get(`http://localhost:3500/user-comments/${uid}`)
     .then((res) => {
@@ -76,16 +75,12 @@ const addUserCallback = () => {
 
 const socialLinks = {
   twitch: {
-    title: "Twitch",
-    url: "https://www.twitch.com/",
+    title: "Steam",
+    url: "https://www.steam.com/",
   },
   discord: {
     title: "Discord",
     url: "https://www.discord.com/",
-  },
-  youtube: {
-    title: "Youtube",
-    url: "https://www.youtube.com/",
   },
   facebook: {
     title: "Facebook",
@@ -119,7 +114,7 @@ const ReplyItem = ({ reply }) => {
 const LinksItem = ({ link }) => {
   return (
     <div className="transition transform hover:-translate-y-1 motion-reduce:transition-none motion-reduce:hover:transform-none">
-      <SocialIcon url={link.url} target="_blank" className="mr-1 -mb-24" />
+      <SocialIcon url={link.url} target="_blank" className="mr-2 -mb-24" />
     </div>
   );
 };
@@ -140,8 +135,8 @@ const SocialInput = ({ link }) => {
             type="text"
             name="company-website"
             id="company-website"
-            className="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300"
-            placeholder="www.example.com"
+            className="focus:ring-indigo-500 focus:border-indigo-500 border-solid border flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300"
+            placeholder=" www.example.com"
           />
         </div>
       </div>
@@ -155,6 +150,7 @@ export default function ProfilePage() {
   const { user } = useContext(userContext);
   let [isOpen, setIsOpen] = useState(false);
   const [userToRender, setUserToRender] = useState();
+  const [comments, setComments] = useState();
   let currUsername;
   if (user) {
     const currUsernameStr = user.email.toString();
@@ -162,15 +158,15 @@ export default function ProfilePage() {
   }
 
   useEffect(() => {
-    // if (currUsername) {
-    //   newUsername == currUsername
-    //     ? getUserCallback(setUserToRender)
-    //     : getOtherUserCallback(username, setUserToRender);
-    // }
+    if (currUsername) {
+      newUsername == currUsername
+        ? getUserCallback(setUserToRender)
+        : getOtherUserCallback(username, setUserToRender);
+    }
     
     getUserCallback(setUserToRender);
 
-    // getRecentCommentsCallback();
+    // getRecentCommentsCallback(setUserToRender.uid, setComments);
   }, [user]);
 
   const handleSubmit = (e) => {
@@ -195,7 +191,6 @@ export default function ProfilePage() {
               Edit Profile
             </button>
           </div>
-
           <Transition appear show={isOpen} as={Fragment}>
             <Dialog
               as="div"

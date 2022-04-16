@@ -20,6 +20,25 @@ function getUser(dbConn, uid) {
     })
 }
 
+function getRecentComments(dbConn, uid) {
+    return new Promise((resolve, reject) => {
+        dbConn.query(`
+            SELECT *
+            FROM message
+            WHERE uid = ?
+            ORDER BY timestamp DESC
+            LIMIT 5
+        `, [uid],
+        (err, comments) => {
+            if(err) {
+                reject(err)
+            }else {
+                resolve(comments)
+            }
+        })
+    })
+}
+
 function addUser(dbConn, uid, username, discord, steam, facebook, description) {
     return new Promise((resolve, reject) => {
         dbConn.query(`
@@ -44,5 +63,6 @@ function addUser(dbConn, uid, username, discord, steam, facebook, description) {
 
 module.exports = {
     getUser,
+    getRecentComments,
     addUser
 }

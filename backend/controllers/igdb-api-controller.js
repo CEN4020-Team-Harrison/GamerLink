@@ -103,76 +103,76 @@ const getGameInfo = async (req, res) => {
 		},
 		data: `fields name, cover, first_release_date, genres, platforms, version_title, summary; where id = ${req.params.gid};`
 	})
-	.then(response => {
+	.then(async response => {
 		gameInfo = response.data[0];
-	})
-	.catch(err => {
-		console.error(err);
-	});
-	
-	// Get genres title
-	await axios({
-		url: BASE_URL + "/genres",
-		method: 'POST',
-		headers: {
-				'Accept': 'application/json',
-				'Client-ID': 'wud75t3ykfbkz3me3av3xpo4k4gwqq',
-				'Authorization': 'Bearer ' + accessToken,
-		},
-		data: `fields name; where id = (${gameInfo.genres});`
-	})
-	.then(response => {
-		response.data.forEach(genre => {
-			genres_title.push(genre.name);
+
+		// Get genres title
+		await axios({
+			url: BASE_URL + "/genres",
+			method: 'POST',
+			headers: {
+					'Accept': 'application/json',
+					'Client-ID': 'wud75t3ykfbkz3me3av3xpo4k4gwqq',
+					'Authorization': 'Bearer ' + accessToken,
+			},
+			data: `fields name; where id = (${gameInfo.genres});`
+		})
+		.then(response => {
+			response.data.forEach(genre => {
+				genres_title.push(genre.name);
+			});
+
+			gameInfo.genres = genres_title;
+		})
+		.catch(err => {
+			console.error(err);
 		});
 
-		gameInfo.genres = genres_title;
-	})
-	.catch(err => {
-		console.error(err);
-	});
+		// Get platforms title
+		await axios({
+			url: BASE_URL + "/platforms",
+			method: 'POST',
+			headers: {
+					'Accept': 'application/json',
+					'Client-ID': 'wud75t3ykfbkz3me3av3xpo4k4gwqq',
+					'Authorization': 'Bearer ' + accessToken,
+			},
+			data: `fields name; where id = (${gameInfo.platforms});`
+		})
+		.then(response => {
+			response.data.forEach(platform => {
+				platforms.push(platform.name);
+			});
 
-	// Get platforms title
-	await axios({
-		url: BASE_URL + "/platforms",
-		method: 'POST',
-		headers: {
-				'Accept': 'application/json',
-				'Client-ID': 'wud75t3ykfbkz3me3av3xpo4k4gwqq',
-				'Authorization': 'Bearer ' + accessToken,
-		},
-		data: `fields name; where id = (${gameInfo.platforms});`
-	})
-	.then(response => {
-		response.data.forEach(platform => {
-			platforms.push(platform.name);
+			gameInfo.platforms = platforms;
+		})
+		.catch(err => {
+			console.error(err);
 		});
 
-		gameInfo.platforms = platforms;
-	})
-	.catch(err => {
-		console.error(err);
-	});
-
-	// Get cover id
-	await axios({
-		url: BASE_URL + "/covers",
-		method: 'POST',
-		headers: {
-				'Accept': 'application/json',
-				'Client-ID': 'wud75t3ykfbkz3me3av3xpo4k4gwqq',
-				'Authorization': 'Bearer ' + accessToken,
-		},
-		data: `fields image_id; where id = ${gameInfo.cover};`
-	})
-	.then(response => {
-		gameInfo.cover = response.data[0].image_id;
-	})
-	.catch(err => {
-		console.error(err);
-	});
+		// Get cover id
+		await axios({
+			url: BASE_URL + "/covers",
+			method: 'POST',
+			headers: {
+					'Accept': 'application/json',
+					'Client-ID': 'wud75t3ykfbkz3me3av3xpo4k4gwqq',
+					'Authorization': 'Bearer ' + accessToken,
+			},
+			data: `fields image_id; where id = ${gameInfo.cover};`
+		})
+		.then(response => {
+			gameInfo.cover = response.data[0].image_id;
+		})
+		.catch(err => {
+			console.error(err);
+		});
 	
-	res.send(gameInfo);
+		res.send(gameInfo);
+	})
+	.catch(err => {
+		console.error(err);
+	});
 }
 
 module.exports = { getPopularGames, getGameInfo }

@@ -1,16 +1,20 @@
 import { Dialog, Transition } from "@headlessui/react";
 import React, { Fragment, useContext, useEffect, useState } from "react";
 
-import Loader from "./Loader";
+import { SocialIcon } from "react-social-icons";
 import avatar from "../avatar-placeholder.png";
 import axios from "axios";
+import { useParams } from "react-router-dom";
 import { userContext } from "./userContext";
 
-const getUserCallback = () => {
+const getUserCallback = (setUserToRender) => {
   axios
     .get("http://localhost:3500/user")
     .then((res) => {
+      console.log("here00");
       console.log(res.data);
+      setUserToRender(res.data);
+      console.log("currloginuser", res.data);
     })
     .catch((err) => {
       console.log(err);
@@ -19,19 +23,20 @@ const getUserCallback = () => {
 
 // Note to dan: this one is used to visit another user's profile
 // (no edit button should be shown).
-const getOtherUserCallback = (uid) => {
+const getOtherUserCallback = (uid, setUserToRender) => {
   axios
     .get(`http://localhost:3500/other-user/${uid}`)
     .then((res) => {
-      console.log(res.data);
+      setUserToRender(res.data);
+      console.log("currchosenuser", res.data);
     })
     .catch((err) => {
       console.log(err);
     });
-}
+};
 
 // Note to dan: this one returns the five most recent comments
-const getRecentCommentsCallback = (uid) => {
+const getRecentCommentsCallback = (uid, setComments) => {
   axios
     .get(`http://localhost:3500/user-comments/${uid}`)
     .then((res) => {
@@ -40,7 +45,7 @@ const getRecentCommentsCallback = (uid) => {
     .catch((err) => {
       console.log(err);
     });
-}
+};
 
 // Note to frontend: in the request below you should add the uid as
 // a parameter in place of the "0". The request adds or updates information
@@ -69,18 +74,18 @@ const addUserCallback = () => {
     });
 };
 
-const links = {
-  link1: {
-    linkName: "Twitter",
-    linkUrl: "Twitter.com",
+const socialLinks = {
+  twitch: {
+    title: "Steam",
+    url: "https://www.steam.com/",
   },
-  link2: {
-    linkName: "Discord",
-    linkUrl: "Discord.com",
+  discord: {
+    title: "Discord",
+    url: "https://www.discord.com/",
   },
-  link3: {
-    linkName: "Youtube",
-    linkUrl: "Youtube.com",
+  facebook: {
+    title: "Facebook",
+    url: "https://www.facebook.com/",
   },
 };
 
@@ -93,18 +98,6 @@ const replies = {
   },
   reply3: {
     message: "Fortnite is so musch better and cheaper",
-  },
-};
-
-const socialLinks = {
-  discord: {
-    title: "Discord",
-  },
-  facebook: {
-    title: "Facebook",
-  },
-  twitch: {
-    title: "Twitch",
   },
 };
 
@@ -121,11 +114,8 @@ const ReplyItem = ({ reply }) => {
 
 const LinksItem = ({ link }) => {
   return (
-    <div>
-      <span className="">{link.linkName}</span>
-      <div className="pt-3">
-        <p className="text-gray-500 text-sm">{link.linkUrl}</p>
-      </div>
+    <div className="transition transform hover:-translate-y-1 motion-reduce:transition-none motion-reduce:hover:transform-none">
+      <SocialIcon url={link.url} target="_blank" className="mr-2 -mb-24" />
     </div>
   );
 };
@@ -138,7 +128,7 @@ const SocialInput = ({ link }) => {
           {link.title}
         </label>
         <div className="mt-1 flex rounded-md shadow-sm">
-          <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">
+          <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">
             {" "}
             http://{" "}
           </span>
@@ -146,8 +136,8 @@ const SocialInput = ({ link }) => {
             type="text"
             name="company-website"
             id="company-website"
-            className="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300"
-            placeholder="www.example.com"
+            className="focus:ring-indigo-500 focus:border-indigo-500 border-solid border flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300"
+            placeholder=" www.example.com"
           />
         </div>
       </div>
@@ -156,13 +146,36 @@ const SocialInput = ({ link }) => {
 };
 
 export default function ProfilePage() {
+  const { username } = useParams();
+  let newUsername = username.substring(1);
   const { user } = useContext(userContext);
   let [isOpen, setIsOpen] = useState(false);
+  const [userToRender, setUserToRender] = useState();
+  const [comments, setComments] = useState();
+  let currUsername;
+  if (user) {
+    const currUsernameStr = user.email.toString();
+    currUsername = currUsernameStr.substring(0, currUsernameStr.indexOf("@"));
+  }
 
   useEffect(() => {
-    // Example call to recent callbacks. Need to dynamic provide email
-    getRecentCommentsCallback("bryantrianarueda@gmail.com")
-  }, [])
+    if (currUsername) {
+      if(newUsername == currUsername) {
+        getUserCallback(setUserToRender);
+        console.log("here0");
+      }else{
+        getOtherUserCallback(username, setUserToRender);
+        console.log("here1");
+      }
+      // newUsername == currUsername
+      //   ? getUserCallback(setUserToRender)
+      //   : getOtherUserCallback(username, setUserToRender);
+    }
+    
+    getUserCallback(setUserToRender);
+
+    // getRecentCommentsCallback(setUserToRender.uid, setComments);
+  }, [user]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -176,17 +189,16 @@ export default function ProfilePage() {
             <span className="font-bold flex text-lg justify-center">
               {user.name && user.name}
             </span>
-            <div className="flex justify-start h-40 px-5">
-              <img src={avatar} className="h-40 mt-5" />
+            <div className="flex justify-start h-52 px-5">
+              <img src={avatar} className="h-52 mt-5" />
             </div>
             <button
               onClick={() => setIsOpen(true)}
-              className="w-40 h-8 ml-5 mt-8 font-medium bg-purple-600 hover:bg-purple-500 text-white rounded"
+              className="w-52 h-8 ml-5 mt-8 font-medium bg-purple-600 hover:bg-purple-500 text-white rounded"
             >
               Edit Profile
             </button>
           </div>
-
           <Transition appear show={isOpen} as={Fragment}>
             <Dialog
               as="div"
@@ -231,7 +243,7 @@ export default function ProfilePage() {
                       </Dialog.Title>
 
                       <div className="mt-2">
-                        <p className="mt-5 mb-1 text-sm text-gray-500">
+                        <p className="mt-5 mb-1 text-sm text-black-500">
                           Website
                         </p>
                         {Object.entries(socialLinks).map(([key, link]) => (
@@ -244,7 +256,7 @@ export default function ProfilePage() {
                               id="about"
                               name="about"
                               className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mt-1 block w-full sm:text-sm border border-gray-300 rounded-md"
-                              placeholder="you@example.com"
+                              placeholder="Type something here..."
                             ></textarea>
                           </div>
                           <p className="mt-2 text-sm text-gray-500">
@@ -253,7 +265,6 @@ export default function ProfilePage() {
                           </p>
                         </div>
                       </div>
-
                       <div className="mt-4">
                         <button
                           type="submit"
@@ -275,15 +286,22 @@ export default function ProfilePage() {
               </form>
             </Dialog>
           </Transition>
-
-          <div className="text-gray flex flex-col"></div>
-          <div>
-            <span className="font-semibold text-lg">Links</span>
-            {Object.entries(links).map(([key, value]) => (
-              <div className="flex justify-start" key={key}>
-                <LinksItem link={value} />
-              </div>
-            ))}
+          <div className="grid grid-cols-1 divide-y divide-gray-300">
+            <div className="flex">
+              {Object.entries(socialLinks).map(([key, value]) => (
+                <div className="flex justify-start" key={key}>
+                  <LinksItem link={value} />
+                </div>
+              ))}
+            </div>
+            <div className="max-w-md">
+              <h2 className="mt-4 italic font-serif">
+                {"'"}Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+                sed do eiusmod tempor incididunt ut labore et dolore magna
+                aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+                ullamco laboris nisi ut aliquip ex ea commodo consequat.{"'"}
+              </h2>
+            </div>
           </div>
         </div>
         <div className="flex flex-col mt-20">
@@ -298,7 +316,5 @@ export default function ProfilePage() {
         </div>
       </div>
     </div>
-  ) : (
-    <Loader />
-  );
+  ) : null;
 }

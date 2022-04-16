@@ -8,16 +8,12 @@ const createError = require("http-errors")
 const http = require("http-status-codes")
 
 const getGame = jest.fn()
-const getRatedGames = jest.fn()
 const getGameMessages = jest.fn()
-const addGameRating = jest.fn()
 const addGameMessage = jest.fn()
 
 const fakeGameDB = {
     getGame,
-    getRatedGames,
     getGameMessages,
-    addGameRating,
     addGameMessage
 }
 
@@ -53,24 +49,6 @@ describe("getGame()", () => {
     })
 })
 
-describe("getRatedGames()", () => {
-    it("throw BAD_REQUEST error if uid is missing", () => {
-        const req = { params: {} }
-        const res = {}
-        const next = jest.fn()
-        
-        expect(() => gameController.getRatedGames(dbConn, fakeGameDB)(req, res, next)).toThrowError(createError(http.StatusCodes.BAD_REQUEST, "invalid uid."))
-    })
-
-    it("throw BAD_REQUEST error if uid is undefined", () => {
-        const req = { params: { uid: undefined } }
-        const res = {}
-        const next = jest.fn()
-        
-        expect(() => gameController.getRatedGames(dbConn, fakeGameDB)(req, res, next)).toThrowError(createError(http.StatusCodes.BAD_REQUEST, "invalid uid."))
-    })
-})
-
 describe("getGameMessages()", () => {
     it("throw BAD_REQUEST error if gid is missing", () => {
         const req = { params: {} }
@@ -86,56 +64,6 @@ describe("getGameMessages()", () => {
         const next = jest.fn()
         
         expect(() => gameController.getGameMessages(dbConn, fakeGameDB)(req, res, next)).toThrowError(createError(http.StatusCodes.BAD_REQUEST, "invalid gid."))
-    })
-})
-
-describe("addGameRating()", () => {
-    it("throw BAD_REQUEST error if gid is missing", () => {
-        const req = { params: { uid: "0", rating: "0" } }
-        const res = {}
-        const next = jest.fn()
-        
-        expect(() => gameController.addGameRating(dbConn, fakeGameDB)(req, res, next)).toThrowError(createError(http.StatusCodes.BAD_REQUEST, "invalid gid."))
-    })
-
-    it("throw BAD_REQUEST error if gid is undefined", () => {
-        const req = { params: { gid: undefined, uid: "0", rating: "0" } }
-        const res = {}
-        const next = jest.fn()
-        
-        expect(() => gameController.addGameRating(dbConn, fakeGameDB)(req, res, next)).toThrowError(createError(http.StatusCodes.BAD_REQUEST, "invalid gid."))
-    })
-
-    it("throw BAD_REQUEST error if uid is missing", () => {
-        const req = { params: { gid: "0", rating: "0" } }
-        const res = {}
-        const next = jest.fn()
-        
-        expect(() => gameController.addGameRating(dbConn, fakeGameDB)(req, res, next)).toThrowError(createError(http.StatusCodes.BAD_REQUEST, "invalid uid."))
-    })
-
-    it("throw BAD_REQUEST error if uid is undefined", () => {
-        const req = { params: { gid: "0", uid: undefined, rating: "0" } }
-        const res = {}
-        const next = jest.fn()
-        
-        expect(() => gameController.addGameRating(dbConn, fakeGameDB)(req, res, next)).toThrowError(createError(http.StatusCodes.BAD_REQUEST, "invalid uid."))
-    })
-
-    it("throw BAD_REQUEST error if rating is missing", () => {
-        const req = { params: { gid: "0", uid: "0" } }
-        const res = {}
-        const next = jest.fn()
-        
-        expect(() => gameController.addGameRating(dbConn, fakeGameDB)(req, res, next)).toThrowError(createError(http.StatusCodes.BAD_REQUEST, "invalid rating."))
-    })
-
-    it("throw BAD_REQUEST error if rating is undefined", () => {
-        const req = { params: { gid: "0", uid: "0", rating: undefined} }
-        const res = {}
-        const next = jest.fn()
-        
-        expect(() => gameController.addGameRating(dbConn, fakeGameDB)(req, res, next)).toThrowError(createError(http.StatusCodes.BAD_REQUEST, "invalid rating."))
     })
 })
 

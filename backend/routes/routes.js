@@ -17,11 +17,7 @@ const userDB = require("../database/user-db")
 const router = express.Router();
 
 router.get("/game/:gid", gameController.getGame(db.conn, gameDB))
-router.get("/rated-games", gameController.getRatedGames(db.conn, gameDB))
-router.get("/avg-game-rating/:gid", gameController.getGameRating(db.conn, gameDB))
-router.get("/game-rating/:gid", gameController.getGameRatingByUser(db.conn, gameDB))
 router.get("/game-messages/:gid", gameController.getGameMessages(db.conn, gameDB))
-router.post("/rate-game/:gid/rating/:rating", gameController.addGameRating(db.conn, gameDB))
 router.post("/add-message/:gid", gameController.addGameMessage(db.conn, gameDB))
 
 router.post("/auth/google-login", authController.verifyLoginData())
